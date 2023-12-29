@@ -20,4 +20,16 @@ class Shop {
     required this.owner,
     required this.products,
   });
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'photo': photo,
+      'description': description,
+      'address': address,
+      'latitude': latitude,
+      'longitude': longitude,
+      'owner': owner,
+      'products': products.map((product) => product.toMap()).toList(),
+    };
+  }
 }

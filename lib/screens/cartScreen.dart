@@ -1,17 +1,16 @@
-import 'package:e_commerce/model/product.dart';
 import 'package:e_commerce/providers/cartProvider.dart';
+import 'package:e_commerce/model/product.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CartScreen extends StatelessWidget {
    final List<Product> cart;
   const CartScreen({Key? key, required this.cart}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     // Access the CartProvider using Provider.of
     CartProvider cartProvider = Provider.of<CartProvider>(context, listen: false);
-
-    // Now you can use cartProvider.cart to get the cart list
 
     return Scaffold(
       appBar: AppBar(
@@ -74,7 +73,6 @@ class CartScreen extends StatelessWidget {
     );
   }
 }
-
 
 class OrderBookedScreen extends StatelessWidget {
   @override
