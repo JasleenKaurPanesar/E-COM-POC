@@ -61,7 +61,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(widget.shop.photo),
+                      image: NetworkImage(widget.shop.photo),
                       fit: BoxFit.cover,
                     ),
                   ),

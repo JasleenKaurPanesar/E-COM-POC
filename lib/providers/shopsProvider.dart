@@ -23,11 +23,22 @@ class ShopProvider extends ChangeNotifier {
   }
 
   List<Shop> getShopsInRadius(Position userLocation, double selectedRadius) {
+  
     if (_shops.isEmpty) {
       print('Shops list is empty.');
       return [];
     }
+   var x=_shops.where((shop) {
+      double distance = Geolocator.distanceBetween(
+        userLocation.latitude,
+        userLocation.longitude,
+        shop.latitude,
+        shop.longitude,
+      );
 
+      return distance / 1000 <= selectedRadius; // Convert to kilometers
+    }).toList();
+      print("location ${x[0].name}");
     return _shops.where((shop) {
       double distance = Geolocator.distanceBetween(
         userLocation.latitude,

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:e_commerce/providers/cartProvider.dart';
 import 'package:e_commerce/providers/shopsProvider.dart';
+import 'package:e_commerce/providers/authProvider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
         ChangeNotifierProvider(create: (context) => ShopProvider()),
         ChangeNotifierProvider(create: (context) => CartProvider(context.read<ShopProvider>())),
         

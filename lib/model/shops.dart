@@ -3,7 +3,9 @@ import 'package:e_commerce/model/product.dart';
 import 'package:e_commerce/model/shop.dart';
 
 class ShopList {
+ 
   static Future<List<Shop>> getShops() async {
+     print("shopList");
     try {
       CollectionReference _referenceShoppingList =
           FirebaseFirestore.instance.collection('shops');

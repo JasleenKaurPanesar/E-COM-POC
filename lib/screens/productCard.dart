@@ -44,7 +44,7 @@ class _ProductCardState extends State<ProductCard> {
           height: 60,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage(widget.product.photo),
+              image: NetworkImage(widget.product.photo),
               fit: BoxFit.cover,
             ),
             borderRadius: BorderRadius.circular(8),

@@ -11,39 +11,39 @@ Image logoWidget(String imageName){
 
 }
 
-  TextFormField buildTextField(
-    String text,
-    IconData icon,
-    bool isPasswordType,
-    TextEditingController controller,
-    String? Function(String?)? validator,
-    bool isButtonEnabled,
-  ) {
-    return TextFormField(
-      controller: controller,
-      obscureText: isPasswordType,
-      enableSuggestions: !isPasswordType,
-      autocorrect: !isPasswordType,
-      cursorColor: Colors.black,
-      validator: validator,
-      style: TextStyle(color: Colors.black.withOpacity(0.9)),
-      decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Colors.black),
-        labelText: text,
-        labelStyle: TextStyle(color: Colors.black.withOpacity(0.9)),
-        filled: true,
-        floatingLabelBehavior: FloatingLabelBehavior.never,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
-          borderSide: BorderSide(width: 0, style: BorderStyle.none),
-        ),
-        errorText: isButtonEnabled ? (validator != null ? validator(controller.text) : null) : null,
+ TextFormField buildTextField(
+  String text,
+  IconData icon,
+  bool isPasswordType,
+  TextEditingController controller,
+  String? Function(String?)? validator,
+  bool isButtonEnabled,
+) {
+  return TextFormField(
+    controller: controller,
+    obscureText: isPasswordType,
+    enableSuggestions: !isPasswordType,
+    autocorrect: !isPasswordType,
+    cursorColor: Colors.black,
+    validator: validator,
+    style: TextStyle(color: Colors.black.withOpacity(0.9)),
+    decoration: InputDecoration(
+      prefixIcon: Icon(icon, color: Colors.black),
+      labelText: text,
+      labelStyle: TextStyle(color: Colors.black.withOpacity(0.9)),
+      filled: true,
+      fillColor: Colors.grey[200],
+      floatingLabelBehavior: FloatingLabelBehavior.never,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(30.0),
+        borderSide: BorderSide(width: 0, style: BorderStyle.none),
       ),
-      keyboardType:
-          isPasswordType ? TextInputType.visiblePassword : TextInputType.emailAddress,
-    );
-  }
-
+      errorText: isButtonEnabled ? (validator != null ? validator(controller.text) : null) : null,
+    ),
+    keyboardType:
+        isPasswordType ? TextInputType.visiblePassword : TextInputType.emailAddress,
+  );
+}
 
 
 Container signInSignUpButon(BuildContext context,bool isLogIn,Function onTap,bool isEnabled){

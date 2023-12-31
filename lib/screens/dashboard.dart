@@ -5,7 +5,8 @@ import 'package:e_commerce/model/shop.dart';
 import 'package:e_commerce/screens/shopDetail.dart';
 import 'package:provider/provider.dart';
 import 'package:e_commerce/providers/cartProvider.dart'; // Import CartProvider
-
+import 'package:e_commerce/utils/customAppBar.dart';
+import 'dart:async';
 class DashboardScreen extends StatefulWidget {
   DashboardScreen({Key? key}) : super(key: key);
 
@@ -16,7 +17,11 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   late List<Shop> shops = [];
   late Position _userLocation;
+  var shopNotFound=false;
   double selectedRadius = 15.0; // Default radius
+
+ 
+
 
   @override
   void initState() {
@@ -24,21 +29,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _initUserLocation();
   }
 
-  Future<void> _initUserLocation() async {
+Future<void> _initUserLocation() async {
     try {
       _userLocation = await _getUserLocation();
       await _loadShops();
+  
     } catch (e) {
       // Handle location retrieval error
       print("Error getting user location: $e");
+    
     }
   }
 
+
   Future<void> _loadShops() async {
+
     ShopProvider shopProvider = context.read<ShopProvider>();
     await shopProvider.initializeShops();
+
     setState(() {
       shops = shopProvider.getShopsInRadius(_userLocation, selectedRadius);
+      if(shops.length==0){
+        shopNotFound=true;
+      }
+      // shops=shopProvider.shops;
     });
   }
 
@@ -47,6 +61,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
+      print("Position ${position}");
       return position;
     } catch (e) {
       // Handle location retrieval error
@@ -67,11 +82,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Shop List'),
+      appBar: CustomAppBar(
+        title: 'Shops List',
+        onLogout: () {
+          // Implement your logout logic here
+          // For example, you can use Navigator to navigate to the login screen
+          Navigator.pushReplacementNamed(context, '/');
+        },
       ),
-      body: shops.isEmpty
+      body: shops.isEmpty && !shopNotFound
           ? Center(child: CircularProgressIndicator())
+         : shops.isEmpty && shopNotFound?
+          Center(child:Text("Shop not found"))
           : Column(
               children: [
                 Row(
@@ -117,7 +139,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundImage: AssetImage(shops[index].photo),
+                            backgroundImage: NetworkImage(shops[index].photo),
                           ),
                           title: Text(shops[index].name),
                           subtitle: Column(
