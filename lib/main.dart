@@ -7,6 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:e_commerce/providers/cartProvider.dart';
 import 'package:e_commerce/providers/shopsProvider.dart';
 import 'package:e_commerce/providers/authProvider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:e_commerce/blocs/auth_bloc/auth_bloc.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -19,14 +22,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
-        ChangeNotifierProvider(create: (context) => ShopProvider()),
-        ChangeNotifierProvider(create: (context) => CartProvider(context.read<ShopProvider>())),
-        
-        // Add other providers as needed
-      ],
+    return BlocProvider<AuthBloc>(
+      create: (context) => AuthBloc(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         routes: {
