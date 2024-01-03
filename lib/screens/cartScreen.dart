@@ -1,24 +1,24 @@
-import 'package:e_commerce/providers/cartProvider.dart';
 import 'package:e_commerce/model/product.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:e_commerce/blocs/cart_bloc/cart_bloc.dart';
+import 'package:e_commerce/blocs/cart_bloc/cart_event.dart';
+import 'package:e_commerce/blocs/cart_bloc/cart_state.dart';
 
 class CartScreen extends StatelessWidget {
-   final List<Product> cart;
+  final List<Product> cart;
+
   const CartScreen({Key? key, required this.cart}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Access the CartProvider using Provider.of
-    CartProvider cartProvider = Provider.of<CartProvider>(context, listen: false);
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Cart"),
       ),
-      body: Consumer<CartProvider>(
-        builder: (context, cartProvider, child) {
-          List<Product> cart = cartProvider.cart;
+      body: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          List<Product> cart = (state as CartLoadedState).cart;
 
           return ListView.builder(
             itemCount: cart.length,
@@ -46,8 +46,8 @@ class CartScreen extends StatelessWidget {
                 trailing: IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
-                    // Use CartProvider to remove the item from the cart
-                    cartProvider.removeFromCart(cart[index]);
+                    // Use CartBloc to remove the item from the cart
+                    context.read<CartBloc>().add(RemoveFromCartEvent(cart[index]));
                   },
                 ),
               );
@@ -57,8 +57,8 @@ class CartScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Assuming you have a function in CartProvider to handle booking the order
-          cartProvider.bookOrder();
+          // Assuming you have a function in CartBloc to handle booking the order
+          context.read<CartBloc>().add(BookOrderEvent());
 
           // Navigate to the Order Booked screen
           Navigator.push(

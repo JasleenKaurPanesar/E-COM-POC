@@ -12,7 +12,7 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  int quantity = 1;
+  int quantity = 0;
 
   void incrementQuantity() {
     setState(() {

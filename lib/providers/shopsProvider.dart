@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:e_commerce/model/shop.dart';
-import 'package:e_commerce/model/shopService.dart';
+import 'package:e_commerce/blocs/shops_bloc/shopService.dart';  
 import 'package:geolocator/geolocator.dart';
 
 class ShopProvider extends ChangeNotifier {

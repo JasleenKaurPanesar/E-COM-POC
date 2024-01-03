@@ -1,11 +1,13 @@
-import 'package:e_commerce/screens/cartScreen.dart';
-import 'package:e_commerce/screens/productCard.dart';
 import 'package:flutter/material.dart';
 import 'package:e_commerce/model/product.dart';
+import 'package:e_commerce/screens/cartScreen.dart';
+import 'package:e_commerce/screens/productCard.dart';
+import 'package:e_commerce/blocs/cart_bloc/cart_bloc.dart';
+import 'package:e_commerce/blocs/cart_bloc/cart_event.dart';
+import 'package:e_commerce/blocs/cart_bloc/cart_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_commerce/model/shop.dart';
-import 'package:provider/provider.dart';
-import 'package:e_commerce/providers/cartProvider.dart';
-import 'package:e_commerce/model/dummydata.dart';
+
 class ShopDetailScreen extends StatefulWidget {
   final Shop shop;
 
@@ -17,27 +19,8 @@ class ShopDetailScreen extends StatefulWidget {
 
 class _ShopDetailScreenState extends State<ShopDetailScreen> {
   void addToCart(Product product, int quantity) {
-    // Access the cart from the CartProvider using Provider.of
-    CartProvider cartProvider = Provider.of<CartProvider>(context, listen: false);
-
-    // Check if the product is already in the cart
-    int index = cartProvider.cart.indexWhere((cartProduct) => cartProduct.name == product.name);
-
-    setState(() {
-      if (index != -1) {
-        // Product already exists in the cart, update quantity
-        cartProvider.cart[index] = Product(
-          name: product.name,
-          price: product.price,
-          quantity:  quantity,
-          photo: product.photo,
-          description: product.description,
-        );
-      } else {
-        // Product doesn't exist in the cart, add a new entry
-        cartProvider.addToCart(product, quantity);
-      }
-    });
+    // Access the cart bloc using BlocProvider
+    context.read<CartBloc>().add(AddToCartEvent(product, quantity));
   }
 
   @override
@@ -47,12 +30,10 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
         title: Text("Shop Details"),
       ),
       body: SingleChildScrollView(
-        child: Consumer<CartProvider>(
-          builder: (context, cartProvider, child) {
-            List<Product> cart = cartProvider.cart;
-             Shop shop = DummyShopList.getShops().firstWhere(
-              (element) => element.name == widget.shop.name,
-            );
+        child: BlocBuilder<CartBloc, CartState>(
+          builder: (context, state) {
+            List<Product> cart = (state as CartLoadedState).cart;
+
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -80,7 +61,6 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                         widget.shop.description,
                         style: TextStyle(color: Colors.grey[600]),
                       ),
-                      
                       SizedBox(height: 20),
                       Text(
                         'Products',
