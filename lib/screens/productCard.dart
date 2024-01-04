@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 class ProductCard extends StatefulWidget {
   final Product product;
   final Function(Product, int) onAddToCart;
+  final Function(String, int) onUpdateQuantityAfterOrder;
 
-  const ProductCard({required this.product, required this.onAddToCart});
+  const ProductCard({
+    required this.product,
+    required this.onAddToCart,
+    required this.onUpdateQuantityAfterOrder,
+  });
 
   @override
   _ProductCardState createState() => _ProductCardState();

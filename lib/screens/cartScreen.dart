@@ -8,7 +8,10 @@ import 'package:e_commerce/blocs/cart_bloc/cart_state.dart';
 class CartScreen extends StatelessWidget {
   final List<Product> cart;
 
-  const CartScreen({Key? key, required this.cart}) : super(key: key);
+  final String shopName;
+
+
+  const CartScreen({Key? key, required this.cart,required this.shopName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

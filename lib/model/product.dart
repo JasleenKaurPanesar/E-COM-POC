@@ -4,6 +4,7 @@ class Product {
   String description;
   double price;
   int quantity;
+  String shopName;
 
   Product({
     required this.name,
@@ -11,6 +12,7 @@ class Product {
     required this.description,
     required this.price,
     required this.quantity,
+    required this.shopName,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,6 +22,7 @@ class Product {
       'description': description,
       'price': price,
       'quantity': quantity,
+      'shopName':shopName
     };
   }
 
@@ -30,6 +33,7 @@ class Product {
       description: map['description'],
       price: (map['price'] is int) ? map['price'].toDouble() : map['price'],
       quantity: map['quantity'],
+      shopName:map['shopName'],
     );
   }
 }

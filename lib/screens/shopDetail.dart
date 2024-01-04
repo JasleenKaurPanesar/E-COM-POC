@@ -23,6 +23,17 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
     context.read<CartBloc>().add(AddToCartEvent(product, quantity));
   }
 
+  void updateProductQuantityAfterOrder(String productName, int newQuantity) {
+    // Find the product in the shop's product list and update the quantity
+    setState(() {
+      widget.shop.products.forEach((product) {
+        if (product.name == productName) {
+          product.quantity = newQuantity;
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,16 +85,22 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                             onAddToCart: (product, quantity) {
                               addToCart(product, quantity);
                             },
+                            onUpdateQuantityAfterOrder: (productName, newQuantity) {
+                              updateProductQuantityAfterOrder(productName, newQuantity);
+                            },
                           );
                         }).toList(),
                       ),
                       SizedBox(height: 20),
+                   
                       ElevatedButton(
                         onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CartScreen(cart: cart),
+                              builder: (context) => CartScreen(cart: cart,
+                               shopName: widget.shop.name,
+                               ),
                             ),
                           );
                         },
@@ -100,3 +117,4 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
     );
   }
 }
+

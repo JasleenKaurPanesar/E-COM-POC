@@ -8,6 +8,7 @@ import 'package:e_commerce/model/shop.dart';
 import 'package:e_commerce/screens/shopDetail.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
+import 'package:e_commerce/blocs/cart_bloc/cart_bloc.dart'; // Import CartBloc
 
 class DashboardScreen extends StatefulWidget {
   DashboardScreen({Key? key}) : super(key: key);
@@ -20,12 +21,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
   late Position _userLocation;
   double selectedRadius = 15.0; // Default radius
   late ShopsBloc shopsBloc;
+  late StreamSubscription _reloadSubscription;
+  late CartBloc cartBloc; // Declare CartBloc
 
   @override
   void initState() {
     super.initState();
     shopsBloc = context.read<ShopsBloc>();
     _initUserLocation();
+    cartBloc = CartBloc(shopsBloc: shopsBloc); // Initialize CartBloc
+    // Subscribe to the reloadStream to listen for changes in shops
+    _reloadSubscription = shopsBloc.reloadStream.listen((_) {
+      shopsBloc.add(LoadShops()); // Reload shops when notified
+    });
+  }
+
+  @override
+  void dispose() {
+    _reloadSubscription.cancel(); // Cancel the subscription to avoid memory leaks
+    super.dispose();
   }
 
   Future<void> _initUserLocation() async {
