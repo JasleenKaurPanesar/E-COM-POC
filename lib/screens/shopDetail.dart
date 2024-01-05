@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:e_commerce/model/product.dart';
 import 'package:e_commerce/screens/cartScreen.dart';
+import 'package:e_commerce/screens/add_product_screen.dart';
 import 'package:e_commerce/screens/productCard.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_bloc.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_event.dart';
@@ -106,6 +107,15 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                         },
                         child: Text('View Cart'),
                       ),
+                      ElevatedButton(
+                      onPressed: () {
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddProductScreen()),
+                       );
+                      },
+                     child: Text('Add Product'),
+                    ),
                     ],
                   ),
                 ),

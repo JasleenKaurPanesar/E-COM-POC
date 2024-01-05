@@ -17,6 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignOutEvent>((_, emit) => _mapSignOutEventToState(emit));
   }
 
+
   Future<void> _mapSignInEventToState(SignInEvent event, Emitter<AuthState> emit) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(

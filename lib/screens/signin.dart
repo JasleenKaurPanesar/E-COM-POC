@@ -1,10 +1,11 @@
 import 'package:e_commerce/reusable_widget/reusable_widget.dart';
 import 'package:e_commerce/screens/signup.dart';
+import 'package:e_commerce/screens/create_shop_success_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_commerce/blocs/auth_bloc/auth_bloc.dart';
 import 'package:e_commerce/blocs/auth_bloc/auth_event.dart';
@@ -41,16 +42,37 @@ class _SignInScreenState extends State<SignInScreen> {
     return _formKey.currentState?.validate() ?? false;
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: 
-      BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-    if (state is AuthAuthenticated) {
-      // Handle authentication success
-      Navigator.pushReplacementNamed(context, "/home");
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) async {
+          if (state is AuthAuthenticated) {
+            // Handle authentication success
+            print("state user ${state.user}");
+
+            // Note: This line is now inside an asynchronous method
+            DocumentSnapshot userSnapshot =
+                await FirebaseFirestore.instance.collection('users').doc(state.user.uid).get();
+
+            Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+
+            // Extract user role from user data
+            String userRole = userData['role'];
+        
+            print("state user ${state.user.uid}");
+            if (userRole == "Shop Owner") {
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (context) => CreateShopSuccessScreen(uid: state.user.uid),
+    ),
+  );
+}
+            else{
+            Navigator.pushReplacementNamed(context, "/home");
+            }
     } else if (state is AuthError) {
       // Hide any existing snackbar before showing a new one
       ScaffoldMessenger.of(context).hideCurrentSnackBar();

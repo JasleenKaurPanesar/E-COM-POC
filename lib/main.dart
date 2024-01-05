@@ -1,6 +1,8 @@
 import 'package:e_commerce/screens/dashboard.dart';
 import 'package:e_commerce/screens/signin.dart';
 import 'package:e_commerce/screens/signup.dart';
+import 'package:e_commerce/screens/create_shop_screen.dart';
+import 'package:e_commerce/screens/create_shop_success_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -35,9 +37,11 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         routes: {
-          '/': (context) => DashboardScreen(),
+          '/': (context) => const SignInScreen(),
           '/login': (context) => const SignUpScreen(),
           '/home': (context) => DashboardScreen(),
+          //  '/createShop': (context) => CreateShopScreen(),
+            // '/createShopSuccess': (context) => CreateShopSuccessScreen(),
         },
       ),
     );

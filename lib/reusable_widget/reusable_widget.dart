@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-
+import 'package:image_picker/image_picker.dart';
 Image logoWidget(String imageName){
   return Image.asset(
     imageName,
@@ -44,6 +44,8 @@ Image logoWidget(String imageName){
         isPasswordType ? TextInputType.visiblePassword : TextInputType.emailAddress,
   );
 }
+
+
 
 
 Container signInSignUpButon(BuildContext context,bool isLogIn,Function onTap,bool isEnabled){
