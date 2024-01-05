@@ -8,7 +8,7 @@ import 'package:e_commerce/blocs/cart_bloc/cart_event.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_commerce/model/shop.dart';
-
+import 'package:e_commerce/cubit/userCubit.dart';
 class ShopDetailScreen extends StatefulWidget {
   final Shop shop;
 
@@ -20,12 +20,10 @@ class ShopDetailScreen extends StatefulWidget {
 
 class _ShopDetailScreenState extends State<ShopDetailScreen> {
   void addToCart(Product product, int quantity) {
-    // Access the cart bloc using BlocProvider
     context.read<CartBloc>().add(AddToCartEvent(product, quantity));
   }
 
   void updateProductQuantityAfterOrder(String productName, int newQuantity) {
-    // Find the product in the shop's product list and update the quantity
     setState(() {
       widget.shop.products.forEach((product) {
         if (product.name == productName) {
@@ -37,6 +35,8 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final String userRole = context.read<UserCubit>().getUserRole() ?? '';
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Shop Details"),
@@ -93,29 +93,30 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                         }).toList(),
                       ),
                       SizedBox(height: 20),
-                   
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CartScreen(cart: cart,
-                               shopName: widget.shop.name,
-                               ),
-                            ),
-                          );
-                        },
-                        child: Text('View Cart'),
-                      ),
-                      ElevatedButton(
-                      onPressed: () {
-                      Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AddProductScreen()),
-                       );
-                      },
-                     child: Text('Add Product'),
-                    ),
+                      if (userRole == 'Shop Owner')
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddProductScreen(shop: widget.shop),
+                              ),
+                            );
+                          },
+                          child: Text('Add Product'),
+                        ),
+                      if (userRole != 'Shop Owner')
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CartScreen(cart: cart, shopName: widget.shop.name),
+                              ),
+                            );
+                          },
+                          child: Text('View Cart'),
+                        ),
                     ],
                   ),
                 ),
@@ -127,4 +128,5 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
     );
   }
 }
+
 

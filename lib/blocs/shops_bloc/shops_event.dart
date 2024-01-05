@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:e_commerce/model/shop.dart';
 import 'package:e_commerce/model/product.dart';
+import 'package:e_commerce/model/shop.dart';
 // Events
 abstract class ShopsEvent extends Equatable {
   const ShopsEvent();
@@ -45,17 +46,17 @@ class FetchUserShops extends ShopsEvent {
   List<Object> get props => [uid];
 }
 //ProductEvent
-// class AddProductEvent extends Equatable {
-//   final String shopId;
-//   final String uid; // Add this property
-//   final Product newProduct;
+class AddProductEvent extends ShopsEvent {
+  final String shopId;
+  final String uid;
+  final Product newProduct;
 
-//   AddProductEvent({
-//     required this.shopId,
-//     required this.uid,
-//     required this.newProduct,
-//   });
+  AddProductEvent({
+    required this.shopId,
+    required this.uid,
+    required this.newProduct,
+  });
 
-//   @override
-//   List<Object?> get props => [shopId, uid, newProduct];
-// }
+  @override
+  List<Object> get props => [shopId, uid, newProduct];
+}

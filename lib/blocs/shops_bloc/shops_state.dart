@@ -65,11 +65,11 @@ class UserShopsError extends ShopsState {
 }
 
 
-// class AddProductSuccess extends ShopsState {
-//   final List<Shop> updatedShops;
+class AddProductSuccess extends ShopsState {
+  final List<Shop> updatedShops;
 
-//   AddProductSuccess({required this.updatedShops});
+  AddProductSuccess({required this.updatedShops});
 
-//   @override
-//   List<Object> get props => [updatedShops];
-// }
+  @override
+  List<Object> get props => [updatedShops];
+}
