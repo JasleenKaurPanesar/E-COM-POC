@@ -11,6 +11,7 @@ import 'package:e_commerce/blocs/auth_bloc/auth_bloc.dart';
 import 'package:e_commerce/blocs/auth_bloc/auth_event.dart';
 import 'package:e_commerce/blocs/auth_bloc/auth_state.dart';
 import 'package:e_commerce/cubit/userCubit.dart';
+import 'package:e_commerce/cubit/roleCubit.dart';
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key});
 
@@ -61,13 +62,14 @@ class _SignInScreenState extends State<SignInScreen> {
 
             // Extract user role from user data
             String userRole = userData['role'];
-        
+          
             print("state user ${state.user.uid}");
              String uid = state.user.uid;
 
   // Access the UserCubit instance and set the uid
+   context.read<RoleCubit>().setUserRole(userRole);
   context.read<UserCubit>().setUid(uid);
-  context.read<UserCubit>().setUserRole(userRole );
+ 
             if (userRole == "Shop Owner") {
   Navigator.pushReplacement(
     context,

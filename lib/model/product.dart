@@ -5,6 +5,7 @@ class Product {
   double price;
   int quantity;
   String shopName;
+  bool isShown; // New field
 
   Product({
     required this.name,
@@ -13,6 +14,7 @@ class Product {
     required this.price,
     required this.quantity,
     required this.shopName,
+    this.isShown = true, // Default value
   });
 
   Map<String, dynamic> toMap() {
@@ -22,7 +24,8 @@ class Product {
       'description': description,
       'price': price,
       'quantity': quantity,
-      'shopName':shopName
+      'shopName': shopName,
+      'isShown': isShown,
     };
   }
 
@@ -33,7 +36,8 @@ class Product {
       description: map['description'],
       price: (map['price'] is int) ? map['price'].toDouble() : map['price'],
       quantity: map['quantity'],
-      shopName:map['shopName'],
+      shopName: map['shopName'],
+      isShown: map['isShown'] ?? true, // Default value if not present in the map
     );
   }
 }

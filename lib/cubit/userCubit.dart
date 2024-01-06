@@ -11,13 +11,5 @@ class UserCubit extends Cubit<String?> {
     return state;
   }
 
-  //  for setUserRole
-  void setUserRole(String role) {
-    emit(role);
-  }
-
-  //for getUserRole
-  String? getUserRole() {
-    return state;
-  }
+ 
 }

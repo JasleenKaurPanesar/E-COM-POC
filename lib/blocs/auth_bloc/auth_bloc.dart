@@ -14,7 +14,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // Register event handlers in the constructor
     on<SignInEvent>(_mapSignInEventToState);
     on<SignUpEvent>(_mapSignUpEventToState);
-    on<SignOutEvent>((_, emit) => _mapSignOutEventToState(emit));
+    on<SignOutEvent>(_mapSignOutEventToState);
   }
 
 
@@ -48,6 +48,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       if (user != null) {
         // Add user data to Firestore
+    
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
@@ -55,7 +56,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           'username': event.username,
           'email': event.email,
           'role': event.role,
+          'shops':[]
         });
+      
         emit(AuthAuthenticated(user: user));
       } else {
         emit(AuthError(error: 'Sign-Up failed. Please check cred.', uniqueId: DateTime.now().toString()));
@@ -65,9 +68,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _mapSignOutEventToState(Emitter<AuthState> emit) async {
+  Future<void> _mapSignOutEventToState(SignOutEvent event,Emitter<AuthState> emit) async {
     try {
       await _auth.signOut();
+
       emit(AuthUnauthenticated());
     } catch (e) {
       emit(AuthError(error: 'Sign-Out failed. Please check.', uniqueId: DateTime.now().toString()));

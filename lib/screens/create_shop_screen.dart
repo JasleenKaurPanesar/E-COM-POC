@@ -75,7 +75,7 @@ Future<void> _pickImage() async {
                     true,
                   ),
                   SizedBox(height: 16),
-                  buildImagePickerField(),
+                  ImagePickerField(controller: _photoController),
                   SizedBox(height: 16),
                   buildTextField(
                     "Description",
@@ -158,29 +158,5 @@ Future<void> _pickImage() async {
     );
   }
 
-  Widget buildImagePickerField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Shop Photo",
-          style: TextStyle(color: Colors.black),
-        ),
-        SizedBox(height: 16),
-        buildTextField(
-          "Upload Photo",
-          Icons.upload,
-          false,
-          _photoController,
-          (value) => value!.isEmpty ? 'Photo URL cannot be empty' : null,
-          true,
-        ),
-        SizedBox(height: 8),
-        ElevatedButton(
-          onPressed: _pickImage,
-          child: Text('Upload'),
-        ),
-      ],
-    );
-  }
+
 }

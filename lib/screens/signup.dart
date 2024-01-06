@@ -9,6 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_commerce/blocs/auth_bloc/auth_bloc.dart';
 import 'package:e_commerce/blocs/auth_bloc/auth_event.dart';
 import 'package:e_commerce/blocs/auth_bloc/auth_state.dart';
+import 'package:e_commerce/cubit/userCubit.dart';
+import 'package:e_commerce/cubit/roleCubit.dart';
+import 'package:e_commerce/screens/create_shop_success_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -26,49 +29,70 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late final AuthBloc authBloc;
   final _formKey = GlobalKey<FormState>();
 
- 
-
   bool isButtonEnabled() {
     return _formKey.currentState?.validate() ?? false;
   }
 
   void movetoHome(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-  
-          context.read<AuthBloc>().add(
+      context.read<AuthBloc>().add(
             SignUpEvent(
-              username:_userNameController.text,
+              username: _userNameController.text,
               email: _emailController.text,
               password: _passwordController.text,
-              role:_selectedRole
-        
+              role: _selectedRole,
             ),
           );
     }
-      setState(() {});
   }
 
-@override
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
         body: BlocListener<AuthBloc, AuthState>(
-          listener: (context, state) {
-            if (state is AuthAuthenticated) {
-              // Handle authentication success
-              Navigator.pushReplacementNamed(context, "/home");
-            } else if (state is AuthError) {
-              // Hide any existing snackbar before showing a new one
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          listener: (context, state) async {
+            try {
+              if (state is AuthAuthenticated) {
+                DocumentSnapshot userSnapshot =
+                    await FirebaseFirestore.instance.collection('users').doc(state.user.uid).get();
 
-              // Show the new snackbar
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.error),
-                  duration: Duration(seconds: 3),
-                ),
-              );
+                Map<String, dynamic>? userData = userSnapshot.data() as Map<String, dynamic>?;
+
+                if (userData == null) {
+                  throw Exception("User data not found");
+                }
+
+                String userRole = userData['role'] ?? 'End User';
+                String uid = state.user.uid;
+
+                context.read<RoleCubit>().setUserRole(userRole);
+                context.read<UserCubit>().setUid(uid);
+
+                if (userRole == "Shop Owner") {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CreateShopSuccessScreen(uid: state.user.uid),
+                    ),
+                  );
+                } else {
+                  Navigator.pushReplacementNamed(context, "/home");
+                }
+              } else if (state is AuthError) {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.error),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+              }
+            } catch (error) {
+              print("Error during authentication: $error");
+              // Handle the error as needed
             }
           },
           child: BlocBuilder<AuthBloc, AuthState>(
@@ -93,8 +117,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                         Container(
-                          margin:
-                              const EdgeInsets.only(top: 5, bottom: 10),
+                          margin: const EdgeInsets.only(top: 5, bottom: 10),
                           alignment: Alignment.center,
                           child: Text(
                             'Please enter the details below to continue',
@@ -112,17 +135,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           Icons.person_2_outlined,
                           false,
                           _userNameController,
-                          (value) =>
-                              value!.isEmpty
-                                  ? 'Username cannot be empty'
-                                  : null,
+                          (value) => value!.isEmpty ? 'Username cannot be empty' : null,
                           isButtonEnabled(),
                         ),
                         const SizedBox(height: 20),
                         DropdownButtonFormField<String>(
                           value: _selectedRole,
-                          items: ['End User', 'Shop Owner']
-                              .map((String role) {
+                          items: ['End User', 'Shop Owner'].map((String role) {
                             return DropdownMenuItem<String>(
                               value: role,
                               child: Text(role),
@@ -138,22 +157,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           decoration: InputDecoration(
                             labelText: 'Select Role',
                             border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.circular(20.0),
+                              borderRadius: BorderRadius.circular(20.0),
                             ),
-                            contentPadding:
-                                EdgeInsets.symmetric(
+                            contentPadding: EdgeInsets.symmetric(
                               horizontal: 15,
                               vertical: 15,
                             ),
                             filled: true,
-                            fillColor:
-                                Colors.grey[200], // Background color
+                            fillColor: Colors.grey[200],
                           ),
                           style: GoogleFonts.questrial(
-                            textStyle: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black),
+                            textStyle: TextStyle(fontSize: 16, color: Colors.black),
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -162,10 +176,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           Icons.mail_outline,
                           false,
                           _emailController,
-                          (value) =>
-                              value!.isEmpty
-                                  ? 'Email Id cannot be empty'
-                                  : null,
+                          (value) => value!.isEmpty ? 'Email Id cannot be empty' : null,
                           isButtonEnabled(),
                         ),
                         const SizedBox(height: 20),
@@ -194,8 +205,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           (value) {
                             if (value!.isEmpty) {
                               return 'Confirm Password cannot be empty';
-                            } else if (value !=
-                                _passwordController.text) {
+                            } else if (value != _passwordController.text) {
                               return 'Passwords do not match';
                             } else {
                               return null;
@@ -211,17 +221,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             width: 350,
                             height: 50,
                             decoration: BoxDecoration(
-                              color: const Color.fromARGB(
-                                  255, 226, 73, 73),
-                              borderRadius:
-                                  BorderRadius.circular(10),
+                              color: const Color.fromARGB(255, 226, 73, 73),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             child: Center(
                               child: Text(
                                 'Sign Up',
                                 style: GoogleFonts.questrial(
-                                  textStyle:
-                                      const TextStyle(
+                                  textStyle: const TextStyle(
                                     fontSize: 20,
                                     color: Colors.white,
                                   ),

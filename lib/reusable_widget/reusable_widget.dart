@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:convert';
 Image logoWidget(String imageName){
   return Image.asset(
     imageName,
@@ -46,8 +47,57 @@ Image logoWidget(String imageName){
 }
 
 
+class ImagePickerField extends StatelessWidget {
+  final TextEditingController controller;
 
+  const ImagePickerField({Key? key, required this.controller}) : super(key: key);
 
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+      );
+
+      if (pickedFile != null) {
+        final bytes = await pickedFile.readAsBytes();
+        final String base64Image = base64Encode(bytes);
+
+        controller.text = base64Image;
+      }
+    } catch (e) {
+      // Handle the exception (e.g., print an error message)
+      print("Error picking image: $e");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Product Photo",
+          style: TextStyle(color: Colors.black),
+        ),
+        SizedBox(height: 16),
+        buildTextField(
+          "Upload Photo",
+          Icons.upload,
+          false,
+          controller,
+          (value) => value!.isEmpty ? 'Photo URL cannot be empty' : null,
+          true,
+        ),
+        SizedBox(height: 8),
+        ElevatedButton(
+          onPressed: _pickImage,
+          child: Text('Upload from Gallery'),
+        ),
+      ],
+    );
+  }
+}
 Container signInSignUpButon(BuildContext context,bool isLogIn,Function onTap,bool isEnabled){
   return Container(
     width:MediaQuery.of(context).size.width,

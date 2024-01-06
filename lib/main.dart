@@ -11,6 +11,7 @@ import 'package:e_commerce/blocs/auth_bloc/auth_bloc.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_bloc.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_bloc.dart';
 import 'package:e_commerce/cubit/userCubit.dart';
+import 'package:e_commerce/cubit/roleCubit.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => UserCubit()),
+        BlocProvider(create: (context) => RoleCubit()),
         BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
         BlocProvider<ShopsBloc>(create: (context) => ShopsBloc()),
         // Provide ShopsBloc to CartBloc

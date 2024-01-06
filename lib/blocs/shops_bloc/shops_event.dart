@@ -60,3 +60,38 @@ class AddProductEvent extends ShopsEvent {
   @override
   List<Object> get props => [shopId, uid, newProduct];
 }
+//Update ProductEvent
+class UpdateProductEvent extends ShopsEvent {
+  final String shopId;
+  final String uid;
+  final String name;
+  final int newQuantity;
+  final double newPrice;
+
+  const UpdateProductEvent({
+    required this.shopId,
+    required this.uid,
+    required this.name,
+    required this.newQuantity,
+    required this.newPrice,
+  });
+
+  @override
+  List<Object?> get props => [shopId, uid, name, newQuantity,newPrice];
+}
+class UpdateProductIsShownEvent extends ShopsEvent {
+  final String shopId;
+  final String uid;
+  final String name;
+  final bool isShown;
+
+  const UpdateProductIsShownEvent({
+    required this.shopId,
+    required this.uid,
+    required this.name,
+    required this.isShown,
+  });
+
+  @override
+  List<Object> get props => [shopId, uid, name, isShown];
+}

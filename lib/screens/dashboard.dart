@@ -6,6 +6,7 @@ import 'package:e_commerce/blocs/shops_bloc/shops_event.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_state.dart';
 import 'package:e_commerce/model/shop.dart';
 import 'package:e_commerce/screens/shopDetail.dart';
+import 'package:e_commerce/utils/customAppBar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
 import 'package:e_commerce/blocs/cart_bloc/cart_bloc.dart'; // Import CartBloc
@@ -24,24 +25,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
   late StreamSubscription _reloadSubscription;
   late CartBloc cartBloc; // Declare CartBloc
 
-  @override
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   shopsBloc = context.read<ShopsBloc>();
+  //   _initUserLocation();
+  //   cartBloc = CartBloc(shopsBloc: shopsBloc); // Initialize CartBloc
+  //   // Subscribe to the reloadStream to listen for changes in shops
+  //   _reloadSubscription = shopsBloc.reloadStream.listen((_) {
+  //     shopsBloc.add(LoadShops()); // Reload shops when notified
+  //   });
+  // }
+
+  // @override
+  // void dispose() {
+  //   _reloadSubscription.cancel(); // Cancel the subscription to avoid memory leaks
+  //   super.dispose();
+  // }
+
+@override
   void initState() {
     super.initState();
     shopsBloc = context.read<ShopsBloc>();
     _initUserLocation();
-    cartBloc = CartBloc(shopsBloc: shopsBloc); // Initialize CartBloc
-    // Subscribe to the reloadStream to listen for changes in shops
+    cartBloc = CartBloc(shopsBloc: shopsBloc);
+
+    // Make sure you are not listening to _reloadSubscription elsewhere
     _reloadSubscription = shopsBloc.reloadStream.listen((_) {
-      shopsBloc.add(LoadShops()); // Reload shops when notified
+      shopsBloc.add(LoadShops());
     });
   }
 
   @override
   void dispose() {
-    _reloadSubscription.cancel(); // Cancel the subscription to avoid memory leaks
+    _reloadSubscription.cancel();
     super.dispose();
   }
-
   Future<void> _initUserLocation() async {
     try {
       _userLocation = await _getUserLocation();
@@ -79,9 +98,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Shops List'),
-      ),
+      appBar: CustomAppBar(title:"Shops List"),
       body: BlocListener<ShopsBloc, ShopsState>(
         listener: (context, state) {
           // Your listener logic goes here, if needed

@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_bloc.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_event.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_state.dart';
-import 'package:e_commerce/screens/shopDetail.dart';
-import 'package:e_commerce/screens/create_shop_screen.dart'; // Import the CreateShop page
+import 'package:e_commerce/screens/productDetail.dart';
+import 'package:e_commerce/screens/create_shop_screen.dart';
+import 'package:e_commerce/utils/customAppBar.dart';
 
 class CreateShopSuccessScreen extends StatefulWidget {
   final String uid;
@@ -19,7 +20,6 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch user shops when the screen is initialized
     context.read<ShopsBloc>().add(FetchUserShops(uid: widget.uid));
   }
 
@@ -34,13 +34,39 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('User Shops'),
-        ),
+        appBar: CustomAppBar(title: 'User Shops'),
         body: BlocBuilder<ShopsBloc, ShopsState>(
           builder: (context, state) {
-            print("state ${state}");
+            print("state $state");
             if (state is UserShopsLoaded) {
+              if (state.userShops.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'No Shops added yet',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => CreateShopScreen(uid: widget.uid)),
+                          );
+                        },
+                        child: Text('Add Shop'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -54,12 +80,11 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
                       ),
                     ),
                   ),
-                   SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        // Navigate to CreateShop page when the button is clicked
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => CreateShopScreen(uid: widget.uid)),
@@ -75,11 +100,9 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
                         final shop = state.userShops[index];
                         return GestureDetector(
                           onTap: () {
-                            // Add your activity on card click here
-                            // For example, you can navigate to another screen
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => ShopDetailScreen(shop: shop)),
+                              MaterialPageRoute(builder: (context) => ProductDetailScreen(shop: shop)),
                             );
                           },
                           child: Card(
@@ -89,7 +112,6 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
                                 children: [
-                                  // Add the shop image on the left side of the card
                                   Container(
                                     width: 80,
                                     height: 80,
@@ -102,7 +124,6 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
                                     ),
                                   ),
                                   SizedBox(width: 8),
-                                  // Add shop details on the right side of the card
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,11 +152,10 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
                       },
                     ),
                   ),
-                 
                 ],
               );
-            } else {
-              // You can customize the loading state as needed
+            } 
+            else {
               return Center(
                 child: CircularProgressIndicator(),
               );

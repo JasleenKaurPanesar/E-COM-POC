@@ -16,6 +16,8 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
     on<CreateShop>(_mapCreateShopToState);
     on<FetchUserShops>(_mapFetchUserShopsToState);
     on<AddProductEvent>(_mapAddProductToState);
+    on<UpdateProductEvent>(_mapUpdateProductToState);
+    on<UpdateProductIsShownEvent>(_mapUpdateProductIsShownToState);
   }
 
   // Stream for reloading shops
@@ -120,6 +122,7 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
 
   Future<void> _mapFetchUserShopsToState(FetchUserShops event, Emitter<ShopsState> emit) async {
     try {
+
       CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
 
       DocumentSnapshot userSnapshot = await usersCollection.doc(event.uid).get();
@@ -169,42 +172,145 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
     }
   }
 
-  Future<void> _mapAddProductToState(AddProductEvent event, Emitter<ShopsState> emit) async {
-    print("chekkkkkkkkkkk ${event.shopId} ${event.uid}");
-    try {// Fetch the current shop data
-DocumentSnapshot shopSnapshot = await FirebaseFirestore.instance.collection('shops').doc(event.shopId).get();
+ Future<void> _mapAddProductToState(AddProductEvent event, Emitter<ShopsState> emit) async {
+  print("checkkkkkkkkkkk ${event.shopId} ${event.uid}");
+  try {
+    // Fetch the current shop data
+    DocumentSnapshot shopSnapshot = await FirebaseFirestore.instance.collection('shops').doc(event.shopId).get();
 
-if (shopSnapshot.exists) {
-  Map<String, dynamic> shopData = shopSnapshot.data() as Map<String, dynamic>;
+    if (shopSnapshot.exists) {
+      Map<String, dynamic> shopData = shopSnapshot.data() as Map<String, dynamic>;
 
-  // Ensure that the 'products' field is a list
-  List<dynamic>? productsData = shopData['products'];
+      // Ensure that the 'products' field is a list
+      List<dynamic>? productsData = shopData['products'];
 
-  // Check if productsData is a list
-  List<Product> products = (productsData is List)
-      ? productsData.map((productData) => Product.fromMap(productData)).toList()
-      : [];
+      // Check if productsData is a list
+      List<Product> products = (productsData is List)
+          ? productsData.map((productData) => Product.fromMap(productData)).toList()
+          : [];
 
-  // Add the new product to the list
-  products.add(event.newProduct);
+      // Add the new product to the list
+      products.add(event.newProduct);
 
-  // Update the shop data in Firestore
-  await FirebaseFirestore.instance.collection('shops').doc(event.shopId).update({
-    'products': products.map((product) => product.toMap()).toList(),
-  });
+      // Update the shop data in Firestore
+      await FirebaseFirestore.instance.collection('shops').doc(event.shopId).update({
+        'products': products.map((product) => product.toMap()).toList(),
+      });
+  
+      // Fetch the updated user shops after adding a new product
+      List<Shop> updatedShops = await _fetchUserShops(event.uid);
 
-  // Fetch the updated user shops after adding a new product
-  List<Shop> updatedShops = await _fetchUserShops(event.uid);
-
-  emit(AddProductSuccess(updatedShops: updatedShops));
-  emit(UserShopsLoaded(userShops: updatedShops));
-} else {
-  emit(ShopsError(error: 'Shop not found for ID: ${event.shopId}'));
-}
-} catch (e) {
-      emit(ShopsError(error: 'Error adding product: $e'));
+      emit(AddProductSuccess(updatedShops: updatedShops));
+      emit(UserShopsLoaded(userShops: updatedShops));
+    } else {
+      emit(ShopsError(error: 'Shop not found for ID: ${event.shopId}'));
     }
+  } catch (e) {
+    emit(ShopsError(error: 'Error adding product: $e'));
   }
+}
+Future<void> _mapUpdateProductToState(UpdateProductEvent event, Emitter<ShopsState> emit) async {
+  try {
+    // Fetch the current shop data
+    DocumentSnapshot shopSnapshot = await FirebaseFirestore.instance.collection('shops').doc(event.shopId).get();
+
+    if (shopSnapshot.exists) {
+      Map<String, dynamic> shopData = shopSnapshot.data() as Map<String, dynamic>;
+
+      // Ensure that the 'products' field is a list
+      List<dynamic>? productsData = shopData['products'];
+
+      // Check if productsData is a list
+      List<Product> products = (productsData is List)
+          ? productsData.map((productData) => Product.fromMap(productData)).toList()
+          : [];
+
+      // Find the product with the specified productId
+      Product updatedProduct = products.firstWhere(
+        (product) => product.name == event.name,
+        orElse: () => Product(
+          name: event.name,
+          photo: '', // provide appropriate default values
+          description: '',
+          price: 0.0,
+          quantity: 0,
+          shopName: '',
+        ),
+      );
+
+      // Update the quantity of the product
+      updatedProduct.quantity = event.newQuantity;
+      updatedProduct.price = event.newPrice;
+      // Update the shop data in Firestore
+      await FirebaseFirestore.instance.collection('shops').doc(event.shopId).update({
+        'products': products.map((product) => product.toMap()).toList(),
+      });
+
+      // Fetch the updated user shops after updating the product
+      List<Shop> updatedShops = await _fetchUserShops(event.uid);
+
+      emit(UpdateProductSuccess(updatedShops: updatedShops));
+      emit(UserShopsLoaded(userShops: updatedShops));
+    } else {
+      emit(ShopsError(error: 'Shop not found for ID: ${event.shopId}'));
+    }
+  } catch (e) {
+    emit(ShopsError(error: 'Error updating product: $e'));
+  }
+}
+
+Future<void> _mapUpdateProductIsShownToState(UpdateProductIsShownEvent event, Emitter<ShopsState> emit) async {
+  try {
+    // Fetch the current shop data
+    DocumentSnapshot shopSnapshot = await FirebaseFirestore.instance.collection('shops').doc(event.shopId).get();
+
+    if (shopSnapshot.exists) {
+      Map<String, dynamic> shopData = shopSnapshot.data() as Map<String, dynamic>;
+
+      // Ensure that the 'products' field is a list
+      List<dynamic>? productsData = shopData['products'];
+
+      // Check if productsData is a list
+      List<Product> products = (productsData is List)
+          ? productsData.map((productData) => Product.fromMap(productData)).toList()
+          : [];
+
+      // Find the product with the specified productId
+      Product updatedProduct = products.firstWhere(
+        (product) => product.name == event.name,
+        orElse: () => Product(
+          name: event.name,
+          photo: '', // provide appropriate default values
+          description: '',
+          price: 0.0,
+          quantity: 0,
+          shopName: '',
+        ),
+      );
+
+      // Update the quantity of the product
+      updatedProduct.isShown = event.isShown;
+     
+      // Update the shop data in Firestore
+      await FirebaseFirestore.instance.collection('shops').doc(event.shopId).update({
+        'products': products.map((product) => product.toMap()).toList(),
+      });
+
+      // Fetch the updated user shops after updating the product
+      List<Shop> updatedShops = await _fetchUserShops(event.uid);
+
+      emit(UpdateProductSuccess(updatedShops: updatedShops));
+      emit(UserShopsLoaded(userShops: updatedShops));
+    } else {
+      emit(ShopsError(error: 'Shop not found for ID: ${event.shopId}'));
+    }
+  } catch (e) {
+    emit(ShopsError(error: 'Error updating product: $e'));
+  }
+}
+
+
+
 
   Future<List<Shop>> _fetchUserShops(String uid) async {
     try {

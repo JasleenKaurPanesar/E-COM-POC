@@ -1,30 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:e_commerce/providers/authProvider.dart'; // Import your auth provider
+import 'package:e_commerce/blocs/auth_bloc/auth_event.dart';
+import 'package:e_commerce/blocs/auth_bloc/auth_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:e_commerce/screens/signin.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final VoidCallback onLogout;
+final String title; // Title for the app bar
 
-  const CustomAppBar({Key? key, required this.title, required this.onLogout})
-      : super(key: key);
+  CustomAppBar({required this.title});
+
+  @override
+  Size get preferredSize => Size.fromHeight(56.0);
 
   @override
   Widget build(BuildContext context) {
-   AuthenticationProvider authProvider = Provider.of<AuthenticationProvider>(context);
-
     return AppBar(
-      title: Text(title),
+      // Display user name
+      title:Text(title),
       actions: [
-        if (authProvider.isAuthenticated) // Show only if the user is authenticated
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: onLogout,
-          ),
+        IconButton(
+          icon: Icon(Icons.logout),
+          onPressed: () {
+            // Implement the logout functionality using your userCubit
+            context.read<AuthBloc>().add(SignOutEvent());
+            Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SignInScreen(),
+        ),
+      );
+          },
+        ),
       ],
     );
   }
-
-  @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

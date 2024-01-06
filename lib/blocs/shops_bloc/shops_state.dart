@@ -47,6 +47,10 @@ class ShopsError extends ShopsState {
   @override
   List<Object?> get props => [error];
 }
+class UserShopsLoading extends ShopsState {
+  @override
+  List<Object?> get props => [];
+}
 class UserShopsLoaded extends ShopsState {
   final List<Shop> userShops; // Change the type to List<Shop>
 
@@ -72,4 +76,12 @@ class AddProductSuccess extends ShopsState {
 
   @override
   List<Object> get props => [updatedShops];
+}
+class UpdateProductSuccess extends ShopsState {
+  final List<Shop> updatedShops;
+
+  const UpdateProductSuccess({required this.updatedShops});
+
+  @override
+  List<Object?> get props => [updatedShops];
 }

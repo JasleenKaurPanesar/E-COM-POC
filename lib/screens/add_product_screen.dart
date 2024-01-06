@@ -55,19 +55,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     true,
                   ),
                   SizedBox(height: 16),
-                  buildTextField(
-                    'Product Photo URL',
-                    Icons.image,
-                    false,
-                    _photoController,
-                    (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the product photo URL';
-                      }
-                      return null;
-                    },
-                    true,
-                  ),
+                  ImagePickerField(controller: _photoController),
                   SizedBox(height: 16),
                   buildTextField(
                     'Product Description',
@@ -131,7 +119,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         // Dispatch the AddProductEvent
                         context.read<ShopsBloc>().add(AddProductEvent(
                               shopId: shopId,
-                              uid: uid,
+                              uid: uid1,
                               newProduct: newProduct,
                             ));
 
