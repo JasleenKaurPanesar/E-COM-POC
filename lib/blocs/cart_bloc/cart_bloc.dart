@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:e_commerce/blocs/shops_bloc/shops_event.dart';
 import 'package:e_commerce/model/product.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_event.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_state.dart';
@@ -65,7 +66,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           await shopDocument.update(shopData);
           print('Quantity updated successfully.');
           // Notify the ShopsBloc to reload the shops
-          shopsBloc.reloadShops();
+          shopsBloc.add(LoadShops());
         } else {
           print('Insufficient quantity available.');
         }

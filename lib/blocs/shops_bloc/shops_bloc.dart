@@ -32,6 +32,7 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
   // Function to trigger a reload
   void reloadShops() {
     _reloadController.add(null);
+
   }
 
   void dispose() {
@@ -68,7 +69,7 @@ Future<void> _mapCreateShopToState(CreateShop event, Emitter<ShopsState> emit) a
     emit(CreateShopLoading());
 
    
-    await Future.delayed(Duration(seconds: 2));
+    // await Future.delayed(Duration(seconds: 2));
 
     Shop createdShop = event.newShop;
 

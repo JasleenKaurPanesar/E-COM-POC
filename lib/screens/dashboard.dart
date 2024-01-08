@@ -4,6 +4,7 @@ import 'package:e_commerce/blocs/shops_bloc/shops.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_bloc.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_event.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_state.dart';
+import 'package:e_commerce/blocs/shops_bloc/shopService.dart';
 import 'package:e_commerce/model/shop.dart';
 import 'package:e_commerce/screens/shop_detail.dart';
 import 'package:e_commerce/reusable_widget/custom_app_bar.dart';
@@ -19,10 +20,20 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  late Position _userLocation;
+
   double selectedRadius = 15.0; // Default radius
   late ShopsBloc shopsBloc;
-  late StreamSubscription _reloadSubscription;
+StreamSubscription _reloadSubscription = StreamController().stream.listen((_) {});
+late Position _userLocation = Position(
+    latitude: 0.0,
+    longitude: 0.0,
+    timestamp: DateTime.now(),
+    accuracy: 0.0,
+    altitude: 0.0,
+    heading: 0.0,
+    speed: 0.0,
+    speedAccuracy: 0.0,
+  );
   late CartBloc cartBloc; // Declare CartBloc
 
  
@@ -35,9 +46,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     cartBloc = CartBloc(shopsBloc: shopsBloc);
 
     // Make sure you are not listening to _reloadSubscription elsewhere
+    if(_reloadSubscription==null){
     _reloadSubscription = shopsBloc.reloadStream.listen((_) {
       shopsBloc.add(LoadShops());
-    });
+    });}
   }
 
   @override
@@ -94,7 +106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             } else if (state is ShopsLoaded) {
              
               List<Shop> shops = state.shops;
-              shopsBloc.add(FilterShops(userLocation: _userLocation, selectedRadius: selectedRadius));
+              shops=ShopService.getShopsInRadius(shops, _userLocation, selectedRadius);
               if (shops.isEmpty) {
                 return Center(child: Text("Shop not found"));
               }
