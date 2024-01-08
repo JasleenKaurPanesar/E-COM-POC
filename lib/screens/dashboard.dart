@@ -5,8 +5,8 @@ import 'package:e_commerce/blocs/shops_bloc/shops_bloc.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_event.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_state.dart';
 import 'package:e_commerce/model/shop.dart';
-import 'package:e_commerce/screens/shopDetail.dart';
-import 'package:e_commerce/utils/customAppBar.dart';
+import 'package:e_commerce/screens/shop_detail.dart';
+import 'package:e_commerce/reusable_widget/custom_app_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
 import 'package:e_commerce/blocs/cart_bloc/cart_bloc.dart'; // Import CartBloc

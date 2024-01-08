@@ -6,6 +6,11 @@ import 'shops_state.dart';
 import 'ShopService.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
+
+
 
 class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
   final _reloadController = StreamController<void>();
@@ -54,7 +59,7 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
     }
   }
 
- Future<void> _mapCreateShopToState(CreateShop event, Emitter<ShopsState> emit) async {
+Future<void> _mapCreateShopToState(CreateShop event, Emitter<ShopsState> emit) async {
   try {
     emit(CreateShopLoading());
 
@@ -62,6 +67,14 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
     await Future.delayed(Duration(seconds: 2));
 
     Shop createdShop = event.newShop;
+
+    // Upload the shop photo to Firebase Storage
+    print("file ${File(createdShop.photo).exists()}");
+    File imageFile = File(createdShop.photo); // Assuming event.photo is the file path
+    String photoURL = await _uploadImageToStorage(imageFile);
+
+    // Update the shop photo URL in the createdShop object
+    createdShop.photo = photoURL;
 
     // Add the new shop to the 'shops' field inside the user's document
     await FirebaseFirestore.instance.collection('users').doc(event.uid).update({
@@ -118,6 +131,7 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
     emit(CreateShopFailure(error: 'Failed to create shop. Please try again.'));
   }
 }
+
 
 
   Future<void> _mapFetchUserShopsToState(FetchUserShops event, Emitter<ShopsState> emit) async {
@@ -357,4 +371,19 @@ Future<void> _mapUpdateProductIsShownToState(UpdateProductIsShownEvent event, Em
       return [];
     }
   }
+
+
+Future<String> _uploadImageToStorage(File imageFile) async {
+  try {
+    String fileName = basename(imageFile.path);
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference storageReference = storage.ref().child('shop_images').child(fileName);
+    UploadTask uploadTask = storageReference.putFile(imageFile);
+    await uploadTask.whenComplete(() => print('Image uploaded to storage'));
+    return await storageReference.getDownloadURL();
+  } catch (e) {
+    print('Error uploading image to storage: $e');
+    return '';
+  }
+}
 }

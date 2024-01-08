@@ -9,8 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_commerce/blocs/auth_bloc/auth_bloc.dart';
 import 'package:e_commerce/blocs/auth_bloc/auth_event.dart';
 import 'package:e_commerce/blocs/auth_bloc/auth_state.dart';
-import 'package:e_commerce/cubit/userCubit.dart';
-import 'package:e_commerce/cubit/roleCubit.dart';
+import 'package:e_commerce/cubit/user_cubit.dart';
+import 'package:e_commerce/cubit/role_cubit.dart';
 import 'package:e_commerce/screens/create_shop_success_screen.dart';
 
 class SignUpScreen extends StatefulWidget {

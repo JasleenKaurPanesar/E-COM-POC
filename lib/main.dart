@@ -10,8 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_commerce/blocs/auth_bloc/auth_bloc.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_bloc.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_bloc.dart';
-import 'package:e_commerce/cubit/userCubit.dart';
-import 'package:e_commerce/cubit/roleCubit.dart';
+import 'package:e_commerce/cubit/user_cubit.dart';
+import 'package:e_commerce/cubit/role_cubit.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

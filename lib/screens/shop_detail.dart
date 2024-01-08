@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:e_commerce/model/product.dart';
-import 'package:e_commerce/screens/cartScreen.dart';
+import 'package:e_commerce/screens/cart_screen.dart';
 import 'package:e_commerce/screens/add_product_screen.dart';
-import 'package:e_commerce/screens/productCard.dart';
+import 'package:e_commerce/screens/product_card.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_bloc.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_event.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_commerce/model/shop.dart';
-import 'package:e_commerce/cubit/userCubit.dart';
-import 'package:e_commerce/cubit/roleCubit.dart';
-import 'package:e_commerce/utils/customAppBar.dart';
+import 'package:e_commerce/cubit/user_cubit.dart';
+import 'package:e_commerce/cubit/role_cubit.dart';
+import 'package:e_commerce/reusable_widget/custom_app_bar.dart';
 class ShopDetailScreen extends StatefulWidget {
   final Shop shop;
 

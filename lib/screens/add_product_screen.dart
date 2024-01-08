@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:e_commerce/reusable_widget/reusable_widget.dart';
 import 'package:e_commerce/model/shop.dart';
 import 'package:e_commerce/model/product.dart';
-import 'package:e_commerce/cubit/userCubit.dart';
+import 'package:e_commerce/cubit/user_cubit.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_bloc.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_event.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
