@@ -25,23 +25,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   late StreamSubscription _reloadSubscription;
   late CartBloc cartBloc; // Declare CartBloc
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   shopsBloc = context.read<ShopsBloc>();
-  //   _initUserLocation();
-  //   cartBloc = CartBloc(shopsBloc: shopsBloc); // Initialize CartBloc
-  //   // Subscribe to the reloadStream to listen for changes in shops
-  //   _reloadSubscription = shopsBloc.reloadStream.listen((_) {
-  //     shopsBloc.add(LoadShops()); // Reload shops when notified
-  //   });
-  // }
-
-  // @override
-  // void dispose() {
-  //   _reloadSubscription.cancel(); // Cancel the subscription to avoid memory leaks
-  //   super.dispose();
-  // }
+ 
 
 @override
   void initState() {
@@ -108,8 +92,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             if (state is ShopsLoading) {
               return Center(child: CircularProgressIndicator());
             } else if (state is ShopsLoaded) {
-              print("lengthhhhhhhhhhhh ${state.shops.length}");
+             
               List<Shop> shops = state.shops;
+              shopsBloc.add(FilterShops(userLocation: _userLocation, selectedRadius: selectedRadius));
               if (shops.isEmpty) {
                 return Center(child: Text("Shop not found"));
               }
@@ -128,15 +113,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             child: Text('$value km'),
                           );
                         }).toList(),
-                        onChanged: (double? value) {
-                          if (value != null) {
-                            setState(() {
-                              selectedRadius = value;
-                              // Dispatch the FilterShops event with userLocation and selectedRadius
-                              shopsBloc.add(FilterShops(userLocation: _userLocation, selectedRadius: value));
-                            });
-                          }
-                        },
+                      onChanged: (double? value) {
+                        if (value != null) {
+                          setState(() {
+                            selectedRadius = value;
+                            // Dispatch the FilterShops event with userLocation and selectedRadius
+                            shopsBloc.add(FilterShops(userLocation: _userLocation, selectedRadius: value));
+                          });
+                        }
+                      },
                       ),
                     ],
                   ),

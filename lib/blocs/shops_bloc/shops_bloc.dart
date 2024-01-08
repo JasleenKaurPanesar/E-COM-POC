@@ -3,7 +3,8 @@ import 'package:e_commerce/model/shop.dart';
 import 'package:e_commerce/model/product.dart';
 import 'shops_event.dart';
 import 'shops_state.dart';
-import 'ShopService.dart';
+
+import 'package:e_commerce/blocs/shops_bloc/ShopService.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
@@ -46,30 +47,33 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
     }
   }
 
-  Future<void> _mapFilterShopsToState(FilterShops event, Emitter<ShopsState> emit) async {
-    try {
-      List<Shop> shops = await ShopService.getShopsInRadius(
-        (state as ShopsLoaded).shops,
-        event.userLocation,
-        event.selectedRadius,
-      );
-      emit(ShopsLoaded(shops: shops));
-    } catch (e) {
-      emit(ShopsError(error: 'Error filtering shops'));
-    }
+ Future<void> _mapFilterShopsToState(FilterShops event, Emitter<ShopsState> emit) async {
+
+  try {
+  List<Shop> shops = await ShopService.getAllShops();
+  print("filterrrrrrrrrrrrrrrrrrrrrrrrrr ${shops.length}");
+    shops=await ShopService.getShopsInRadius(
+      shops,
+      event.userLocation,
+      event.selectedRadius,
+    );
+    emit(ShopsLoaded(shops: shops));
+  } catch (e) {
+    emit(ShopsError(error: 'Error filtering shops'));
   }
+}
 
 Future<void> _mapCreateShopToState(CreateShop event, Emitter<ShopsState> emit) async {
   try {
     emit(CreateShopLoading());
 
-    // Simulate the delay with a Future.delayed
+   
     await Future.delayed(Duration(seconds: 2));
 
     Shop createdShop = event.newShop;
 
     // Upload the shop photo to Firebase Storage
-    print("file ${File(createdShop.photo).exists()}");
+    print("filechikuuuuuuuuuuuuu ${File(createdShop.photo).exists()}");
     File imageFile = File(createdShop.photo); // Assuming event.photo is the file path
     String photoURL = await _uploadImageToStorage(imageFile);
 
@@ -121,6 +125,7 @@ Future<void> _mapCreateShopToState(CreateShop event, Emitter<ShopsState> emit) a
         }
       }
 
+    _reloadController.add(null); // Trigger a reload
       emit(CreateShopSuccess());
       emit(UserShopsLoaded(userShops: shops));
     } else {
