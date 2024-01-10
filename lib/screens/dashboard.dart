@@ -54,7 +54,7 @@ late Position _userLocation = Position(
 
   @override
   void dispose() {
-    _reloadSubscription.cancel();
+    _reloadSubscription?.cancel();
     super.dispose();
   }
   Future<void> _initUserLocation() async {
@@ -190,7 +190,7 @@ late Position _userLocation = Position(
             } else if (state is ShopsError) {
               return Center(child: Text(state.error));
             } else {
-              return Center(child: Text("Unknown state"));
+              return const Center(child: CircularProgressIndicator());
             }
           },
         ),

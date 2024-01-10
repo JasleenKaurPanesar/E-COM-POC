@@ -1,4 +1,4 @@
-import 'package:e_commerce/reusable_widget/reusable_widget.dart';
+import 'package:e_commerce/helpers/reusable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,10 +28,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _selectedRole = 'End User';
   late final AuthBloc authBloc;
   final _formKey = GlobalKey<FormState>();
+ bool isButtonClicked = false; 
 
-  bool isButtonEnabled() {
-    return _formKey.currentState?.validate() ?? false;
-  }
 
   void movetoHome(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
@@ -55,10 +53,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           listener: (context, state) async {
             try {
               if (state is AuthAuthenticated) {
-                DocumentSnapshot userSnapshot =
+                DocumentSnapshot? userSnapshot =
                     await FirebaseFirestore.instance.collection('users').doc(state.user.uid).get();
 
-                Map<String, dynamic>? userData = userSnapshot.data() as Map<String, dynamic>?;
+                Map<String, dynamic>? userData = userSnapshot?.data() as Map<String, dynamic>?;
 
                 if (userData == null) {
                   throw Exception("User data not found");
@@ -131,12 +129,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                         buildTextField(
-                          "Enter Username",
-                          Icons.person_2_outlined,
-                          false,
-                          _userNameController,
-                          (value) => value!.isEmpty ? 'Username cannot be empty' : null,
-                          isButtonEnabled(),
+                          text: "Enter Username",
+                          icon: Icons.person_2_outlined,
+                          isPasswordType: false,
+                          controller: _userNameController,
+                          validator: (value) => isButtonClicked && value?.isEmpty == true ? 'Username cannot be empty' : null,
+                          isButtonEnabled: isButtonClicked,
                         ),
                         const SizedBox(height: 20),
                         DropdownButtonFormField<String>(
@@ -159,7 +157,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                               horizontal: 15,
                               vertical: 15,
                             ),
@@ -172,38 +170,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         const SizedBox(height: 20),
                         buildTextField(
-                          "Enter Email",
-                          Icons.mail_outline,
-                          false,
-                          _emailController,
-                          (value) => value!.isEmpty ? 'Email Id cannot be empty' : null,
-                          isButtonEnabled(),
+                          text: "Enter Email",
+                          icon: Icons.mail_outline,
+                          isPasswordType: false,
+                          controller: _emailController,
+                          validator: (value) => isButtonClicked && value?.isEmpty == true ? 'Email Id cannot be empty' : null,
+                          isButtonEnabled: isButtonClicked,
                         ),
                         const SizedBox(height: 20),
                         buildTextField(
-                          "Enter Password",
-                          Icons.lock_outline,
-                          true,
-                          _passwordController,
-                          (value) {
-                            if (value!.isEmpty) {
+                          text: "Enter Password",
+                          icon: Icons.lock_outline,
+                          isPasswordType: true,
+                          controller: _passwordController,
+                          validator: (value) {
+                            if (isButtonClicked && value?.isEmpty == true) {
                               return 'Password cannot be empty';
-                            } else if (value.length < 6) {
+                            } else if (value!.length < 6) {
                               return 'Password length should be at least 6';
                             } else {
                               return null;
                             }
                           },
-                          isButtonEnabled(),
+                          isButtonEnabled: isButtonClicked,
                         ),
                         const SizedBox(height: 20),
                         buildTextField(
-                          "Confirm Password",
-                          Icons.lock_outline,
-                          true,
-                          _confirmPasswordController,
-                          (value) {
-                            if (value!.isEmpty) {
+                          text: "Confirm Password",
+                          icon: Icons.lock_outline,
+                          isPasswordType: true,
+                          controller: _confirmPasswordController,
+                          validator: (value) {
+                            if (isButtonClicked && value?.isEmpty == true) {
                               return 'Confirm Password cannot be empty';
                             } else if (value != _passwordController.text) {
                               return 'Passwords do not match';
@@ -211,11 +209,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               return null;
                             }
                           },
-                          isButtonEnabled(),
+                          isButtonEnabled: isButtonClicked,
                         ),
                         const SizedBox(height: 20),
                         InkWell(
-                          onTap: () => movetoHome(context),
+                          onTap: () {
+                        // Set isButtonClicked to true when the button is tapped
+                        setState(() {
+                          isButtonClicked = true;
+                        });
+                        movetoHome(context);
+                      },
                           child: Container(
                             margin: const EdgeInsets.only(top: 20),
                             width: 350,

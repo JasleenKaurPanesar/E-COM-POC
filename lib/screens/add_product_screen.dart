@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:e_commerce/reusable_widget/reusable_widget.dart';
+import 'package:e_commerce/helpers/reusable_widget.dart';
 import 'package:e_commerce/model/shop.dart';
 import 'package:e_commerce/model/product.dart';
 import 'package:e_commerce/cubit/user_cubit.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_bloc.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_event.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:e_commerce/reusable_widget/image_picker.dart';
+
 
 class AddProductScreen extends StatefulWidget {
   final Shop shop;
 
-  const AddProductScreen({required this.shop});
+  const AddProductScreen({super.key, required this.shop});
 
   @override
   _AddProductScreenState createState() => _AddProductScreenState();
@@ -23,6 +25,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
+  bool _isButtonClicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +33,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Product'),
+        title: const Text('Add Product'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -42,92 +45,130 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   buildTextField(
-                    'Product Name',
-                    Icons.shopping_cart,
-                    false,
-                    _nameController,
-                    (value) {
-                      if (value == null || value.isEmpty) {
+                    text: 'Product Name',
+                    icon: Icons.shopping_cart,
+                    isPasswordType: false,
+                    controller: _nameController,
+                    validator: (value) {
+                      if (_isButtonClicked && (value == null || value.isEmpty)) {
                         return 'Please enter the product name';
                       }
                       return null;
                     },
-                    true,
+                    isButtonEnabled: true,
                   ),
-                  SizedBox(height: 16),
-                  ImagePickerField(controller: _photoController),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: ListTile(
+                      title: Text(
+                        'Add Shop Image',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ImagePickerField(controller: _photoController),
+                    ),
+                  ),
+                  if (_photoController.text.isEmpty && _isButtonClicked)
+                    const Center(
+                      child:Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8,),
+                      child: Text(
+                        'Please pick an image for the product.',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                    ),
+                  const SizedBox(height: 16),
                   buildTextField(
-                    'Product Description',
-                    Icons.description,
-                    false,
-                    _descriptionController,
-                    (value) {
-                      if (value == null || value.isEmpty) {
+                    text: 'Product Description',
+                    icon: Icons.description,
+                    isPasswordType: false,
+                    controller: _descriptionController,
+                    validator: (value) {
+                      if (_isButtonClicked && (value == null || value.isEmpty)) {
                         return 'Please enter the product description';
                       }
                       return null;
                     },
-                    true,
+                    isButtonEnabled: true,
+                    maxLines: 3,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   buildTextField(
-                    'Product Price',
-                    Icons.money,
-                    false,
-                    _priceController,
-                    (value) {
-                      if (value == null || double.tryParse(value) == null) {
+                    text: 'Product Price',
+                    icon: Icons.money,
+                    isPasswordType: false,
+                    controller: _priceController,
+                    validator: (value) {
+                      if (_isButtonClicked && (value == null || double.tryParse(value) == null)) {
                         return 'Please enter a valid price';
                       }
                       return null;
                     },
-                    true,
+                    isButtonEnabled: true,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   buildTextField(
-                    'Product Quantity',
-                    Icons.format_list_numbered,
-                    false,
-                    _quantityController,
-                    (value) {
-                      if (value == null || int.tryParse(value) == null) {
+                    text: 'Product Quantity',
+                    icon: Icons.format_list_numbered,
+                    isPasswordType: false,
+                    controller: _quantityController,
+                    validator: (value) {
+                      if (_isButtonClicked && (value == null || int.tryParse(value) == null)) {
                         return 'Please enter a valid quantity';
                       }
                       return null;
                     },
-                    true,
+                    isButtonEnabled: true,
                   ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      print("checkkkkkk plz");
-                      if (_formKey.currentState!.validate()) {
-                        // Dispatch the AddProductEvent here
-                        final String shopId =
-                            widget.shop.name.toLowerCase().replaceAll(" ", ""); // Replace with your actual shop ID
-                        final String uid = uid1; // Replace with your actual user ID
-                        final Product newProduct = Product(
-                          name: _nameController.text,
-                          photo: _photoController.text,
-                          description: _descriptionController.text,
-                          price: double.parse(_priceController.text),
-                          quantity: int.parse(_quantityController.text),
-                          shopName: widget.shop.name,
-                        );
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _isButtonClicked = true;
+                        });
 
-                        // Dispatch the AddProductEvent
-                        context.read<ShopsBloc>().add(AddProductEvent(
-                              shopId: shopId,
-                              uid: uid1,
-                              newProduct: newProduct,
-                            ));
+                        if (_formKey.currentState!.validate() &&
+                          _photoController.text.isNotEmpty) {
+                          final String shopId = widget.shop.name.toLowerCase().replaceAll(" ", "");
+                          final String uid = uid1;
+                          final Product newProduct = Product(
+                            name: _nameController.text,
+                            photo: _photoController.text,
+                            description: _descriptionController.text,
+                            price: double.parse(_priceController.text),
+                            quantity: int.parse(_quantityController.text),
+                            shopName: widget.shop.name,
+                          );
 
-                        // Navigate back to the ShopDetailScreen
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: Text('Add Product'),
+                          context.read<ShopsBloc>().add(AddProductEvent(
+                            shopId: shopId,
+                            uid: uid1,
+                            newProduct: newProduct,
+                          ));
+
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Text(
+                          'Add Product',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),

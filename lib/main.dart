@@ -12,6 +12,7 @@ import 'package:e_commerce/blocs/shops_bloc/shops_bloc.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_bloc.dart';
 import 'package:e_commerce/cubit/user_cubit.dart';
 import 'package:e_commerce/cubit/role_cubit.dart';
+import 'package:e_commerce/routes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -21,6 +22,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp();
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +41,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        routes: {
-          '/': (context) => const SignInScreen(),
-          '/login': (context) => const SignUpScreen(),
-          '/home': (context) => DashboardScreen(),
-          //  '/createShop': (context) => CreateShopScreen(),
-            // '/createShopSuccess': (context) => CreateShopSuccessScreen(),
-        },
+        routes: AppRoutes.getRoutes(),
       ),
     );
   }

@@ -27,7 +27,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       User? user = userCredential.user;
 
-      if (user != null) {
+    if (user != null) {
+      // Delay to allow time for authentication state to propagate
+      await Future.delayed(Duration(seconds: 1));
         emit(AuthAuthenticated(user: user));
       } else {
         emit(AuthError(error: 'Sign-In failed. Please check cred.', uniqueId: DateTime.now().toString()));
@@ -36,6 +38,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthError(error: 'Sign-In failed. Please check.', uniqueId: DateTime.now().toString()));
     }
   }
+
 
   Future<void> _mapSignUpEventToState(SignUpEvent event, Emitter<AuthState> emit) async {
     try {

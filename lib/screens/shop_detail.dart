@@ -99,7 +99,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                       if (userRole == 'Shop Owner')
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => AddProductScreen(shop: widget.shop),

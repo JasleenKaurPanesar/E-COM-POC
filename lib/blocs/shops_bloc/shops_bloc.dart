@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
+import 'package:e_commerce/helpers/reusable_widget.dart';
 
 
 
@@ -73,14 +74,12 @@ Future<void> _mapCreateShopToState(CreateShop event, Emitter<ShopsState> emit) a
 
     Shop createdShop = event.newShop;
 
-    // Upload the shop photo to Firebase Storage
-    print("filechikuuuuuuuuuuuuu ${File(createdShop.photo).exists()}");
-    File imageFile = File(createdShop.photo); // Assuming event.photo is the file path
-    String photoURL = await _uploadImageToStorage(imageFile);
 
+
+    String photoURL = await uploadImageToStorage(event.newShop.photo, event.newShop.name.toLowerCase().replaceAll(" ", ""));
     // Update the shop photo URL in the createdShop object
-    createdShop.photo = photoURL;
-
+     createdShop.photo = photoURL;
+    print("urllllllll ${photoURL}");
     // Add the new shop to the 'shops' field inside the user's document
     await FirebaseFirestore.instance.collection('users').doc(event.uid).update({
       'shops': FieldValue.arrayUnion([createdShop.name]),
@@ -210,7 +209,10 @@ Future<void> _mapCreateShopToState(CreateShop event, Emitter<ShopsState> emit) a
           : [];
 
       // Add the new product to the list
-      products.add(event.newProduct);
+      Product createProduct=event.newProduct;
+      String photoURL = await uploadImageToStorage(event.newProduct.photo, event.newProduct.name.toLowerCase().replaceAll(" ", ""));
+      createProduct.photo = photoURL;
+      products.add(createProduct);
 
       // Update the shop data in Firestore
       await FirebaseFirestore.instance.collection('shops').doc(event.shopId).update({
@@ -379,17 +381,10 @@ Future<void> _mapUpdateProductIsShownToState(UpdateProductIsShownEvent event, Em
   }
 
 
-Future<String> _uploadImageToStorage(File imageFile) async {
-  try {
-    String fileName = basename(imageFile.path);
-    FirebaseStorage storage = FirebaseStorage.instance;
-    Reference storageReference = storage.ref().child('shop_images').child(fileName);
-    UploadTask uploadTask = storageReference.putFile(imageFile);
-    await uploadTask.whenComplete(() => print('Image uploaded to storage'));
-    return await storageReference.getDownloadURL();
-  } catch (e) {
-    print('Error uploading image to storage: $e');
-    return '';
-  }
-}
+
+
+
+
+
+
 }

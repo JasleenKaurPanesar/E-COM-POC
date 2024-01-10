@@ -1,4 +1,5 @@
-import 'package:e_commerce/reusable_widget/reusable_widget.dart';
+import 'package:e_commerce/helpers/reusable_widget.dart';
+import 'package:e_commerce/screens/dashboard.dart';
 import 'package:e_commerce/screens/signup.dart';
 import 'package:e_commerce/screens/create_shop_success_screen.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:e_commerce/blocs/auth_bloc/auth_event.dart';
 import 'package:e_commerce/blocs/auth_bloc/auth_state.dart';
 import 'package:e_commerce/cubit/user_cubit.dart';
 import 'package:e_commerce/cubit/role_cubit.dart';
+
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key});
 
@@ -24,6 +26,7 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   late FirebaseAuth _auth;
+  bool isButtonClicked = false; // Initialize isButtonClicked to false
 
   @override
   void initState() {
@@ -31,21 +34,36 @@ class _SignInScreenState extends State<SignInScreen> {
     _auth = FirebaseAuth.instance;
   }
 
-  void _signInWithEmailAndPassword(BuildContext context) {
-    context.read<AuthBloc>().add(
-      SignInEvent(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      ),
-    );
+  void _signInWithEmailAndPassword(BuildContext context) async {
+    try {
+      
+      // Dispatch the sign-in event
+      context.read<AuthBloc>().add(
+            SignInEvent(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim(),
+            ),
+          );
+              
+
+    } catch (e) {
+      print("Error during sign-in: $e");
+
+      // Show an error snackbar 
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error during sign-in. Please try again."),
+          duration: Duration(seconds: 3),
+        ),
+      );
+
+  
+    }
   }
 
-  bool isButtonEnabled() {
-    return _formKey.currentState?.validate() ?? false;
-  }
-
- @override
+  @override
   Widget build(BuildContext context) {
+    print("Building SignInScreen");
     return Scaffold(
       backgroundColor: Colors.white,
       body: BlocListener<AuthBloc, AuthState>(
@@ -54,47 +72,48 @@ class _SignInScreenState extends State<SignInScreen> {
             // Handle authentication success
             print("state user ${state.user}");
 
-            // Note: This line is now inside an asynchronous method
             DocumentSnapshot userSnapshot =
                 await FirebaseFirestore.instance.collection('users').doc(state.user.uid).get();
 
             Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
 
-            // Extract user role from user data
             String userRole = userData['role'];
-          
             print("state user ${state.user.uid}");
-             String uid = state.user.uid;
+            String uid = state.user.uid;
 
-  // Access the UserCubit instance and set the uid
-   context.read<RoleCubit>().setUserRole(userRole);
-  context.read<UserCubit>().setUid(uid);
- 
+            context.read<RoleCubit>().setUserRole(userRole);
+            context.read<UserCubit>().setUid(uid);
+
             if (userRole == "Shop Owner") {
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (context) => CreateShopSuccessScreen(uid: state.user.uid),
-    ),
-  );
-}
-            else{
-            Navigator.pushReplacementNamed(context, "/home");
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateShopSuccessScreen(uid: state.user.uid),
+                ),
+              );
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DashboardScreen(),
+                ),
+              );
             }
-    } else if (state is AuthError) {
-      // Hide any existing snackbar before showing a new one
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          } else if (state is AuthError) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.error),
+                duration: Duration(seconds: 3),
+              ),
+            );
 
-      // Show the new snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(state.error),
-          duration: Duration(seconds: 3),
-        ),
-      );
-    }
-  },
-
+            // Set isButtonClicked to true on error
+            setState(() {
+              isButtonClicked = true;
+            });
+          }
+        },
         child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             return SingleChildScrollView(
@@ -159,22 +178,20 @@ class _SignInScreenState extends State<SignInScreen> {
                       child: Column(
                         children: [
                           buildTextField(
-                            "Enter Email",
-                            Icons.mail_outline,
-                            false,
-                            _emailController,
-                            (value) =>
-                                value!.isEmpty ? 'Email Id cannot be empty' : null,
-                            isButtonEnabled(),
+                            text: "Enter Email",
+                            icon: Icons.mail_outline,
+                            controller: _emailController,
+                            validator: (value) =>
+                                isButtonClicked && value!.isEmpty ? 'Email Id cannot be empty' : null,
                           ),
                           const SizedBox(height: 20),
                           buildTextField(
-                            "Confirm Password",
-                            Icons.lock_outline,
-                            true,
-                            _passwordController,
-                            (value) {
-                              if (value!.isEmpty) {
+                            text: "Confirm Password",
+                            icon: Icons.lock_outline,
+                            isPasswordType: true,
+                            controller: _passwordController,
+                            validator: (value) {
+                              if (isButtonClicked && value!.isEmpty) {
                                 return 'Confirm Password cannot be empty';
                               } else if (value != _passwordController.text) {
                                 return 'Passwords do not match';
@@ -182,7 +199,6 @@ class _SignInScreenState extends State<SignInScreen> {
                                 return null;
                               }
                             },
-                            isButtonEnabled(),
                           ),
                           const SizedBox(height: 10),
                           Container(
@@ -202,7 +218,13 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     const SizedBox(height: 20),
                     InkWell(
-                      onTap: () => _signInWithEmailAndPassword(context),
+                      onTap: () {
+                        // Set isButtonClicked to true when the button is tapped
+                        setState(() {
+                          isButtonClicked = true;
+                        });
+                        _signInWithEmailAndPassword(context);
+                      },
                       child: Container(
                         margin: const EdgeInsets.only(top: 20),
                         width: 350,
@@ -248,7 +270,6 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                // Navigate to the sign-up page when "Create an account" is clicked
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
