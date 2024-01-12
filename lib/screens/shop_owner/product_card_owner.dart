@@ -223,7 +223,7 @@ class _ProductCardOwnerState extends State<ProductCardOwner> {
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.blue, // Set the background color
+                          backgroundColor: Colors.blue, // Set the background color
                         ),
                         child: const Text('Save Changes'),
                       ),

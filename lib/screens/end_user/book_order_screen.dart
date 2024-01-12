@@ -1,12 +1,10 @@
 import 'package:e_commerce/blocs/cart_bloc/cart_bloc.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_event.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_state.dart';
-import 'package:e_commerce/blocs/shops_bloc/shops_bloc.dart';
-import 'package:e_commerce/blocs/shops_bloc/shops_event.dart';
 import 'package:e_commerce/model/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:e_commerce/screens/order_booked_screen.dart';
+import 'package:e_commerce/screens/end_user/order_booked_screen.dart';
 
 class BookOrderScreen extends StatelessWidget {
   final List<Product> selectedProducts;
@@ -17,11 +15,10 @@ class BookOrderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
-        // Handle changes in the CartBloc state
         if (state is CartLoadedState) {
           return Scaffold(
             appBar: AppBar(
-              title: Text('Book Order'),
+              title: const Text('View Cart'),
             ),
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,7 +27,7 @@ class BookOrderScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     'Selected Products',
-                    style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                 ),
                 Expanded(
@@ -41,23 +38,25 @@ class BookOrderScreen extends StatelessWidget {
                       return Dismissible(
                         key: UniqueKey(),
                         onDismissed: (direction) {
-                          // Use CartBloc to remove the item from the cart
                           context.read<CartBloc>().add(RemoveFromCartEvent(product));
                         },
                         background: Container(
                           color: Colors.red,
                           alignment: Alignment.centerRight,
-                          padding: EdgeInsets.only(right: 16.0),
-                          child: Icon(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: const Icon(
                             Icons.delete,
                             color: Colors.white,
                           ),
                         ),
-                        child: ListTile(
-                          title: Text(product.name),
-                          subtitle: Text('Price: \$${product.price.toString()}'),
-                          trailing: Text('Qty: ${product.quantity.toString()}'),
-                         
+                        child: Card(
+                          elevation: 3,
+                          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                          child: ListTile(
+                            title: Text(product.name),
+                            subtitle: Text('Price: \$${product.price.toString()}'),
+                            trailing: Text('Qty: ${product.quantity.toString()}'),
+                          ),
                         ),
                       );
                     },
@@ -70,12 +69,12 @@ class BookOrderScreen extends StatelessWidget {
                     children: [
                       Text(
                         'Total Items Quantity: ${calculateTotalQuantity(state)}',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         'Total Order Value: \$${calculateTotalOrderValue(state)}',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -84,39 +83,31 @@ class BookOrderScreen extends StatelessWidget {
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                // Book the order using CartBloc
                 context.read<CartBloc>().add(BookOrderEvent());
-              // Navigate to the Order Booked screen
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => OrderBookedScreen(),
-                  )
+                  ),
                 );
               },
-              child: Icon(Icons.book),
+              child: const Icon(Icons.book),
             ),
           );
         } else {
-          return CircularProgressIndicator(); 
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         }
       },
     );
   }
 
   int calculateTotalQuantity(CartLoadedState state) {
-    int totalQuantity = 0;
-    for (var product in state.cart) {
-      totalQuantity += product.quantity;
-    }
-    return totalQuantity;
+    return state.cart.fold(0, (int total, Product product) => total + product.quantity);
   }
 
   double calculateTotalOrderValue(CartLoadedState state) {
-    double totalOrderValue = 0.0;
-    for (var product in state.cart) {
-      totalOrderValue += (product.price * product.quantity);
-    }
-    return totalOrderValue;
+    return state.cart.fold(0.0, (double total, Product product) => total + (product.price * product.quantity));
   }
 }

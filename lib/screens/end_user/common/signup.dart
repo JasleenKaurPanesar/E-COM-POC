@@ -1,9 +1,7 @@
-import 'package:e_commerce/helpers/reusable_widget.dart';
+import 'package:e_commerce/helpers/widget_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_commerce/screens/dashboard.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_commerce/blocs/auth_bloc/auth_bloc.dart';
@@ -11,7 +9,7 @@ import 'package:e_commerce/blocs/auth_bloc/auth_event.dart';
 import 'package:e_commerce/blocs/auth_bloc/auth_state.dart';
 import 'package:e_commerce/cubit/user_cubit.dart';
 import 'package:e_commerce/cubit/role_cubit.dart';
-import 'package:e_commerce/screens/create_shop_success_screen.dart';
+import 'package:e_commerce/screens/shop_owner/create_shop_success_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -21,10 +19,10 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  TextEditingController _userNameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   String _selectedRole = 'End User';
   late final AuthBloc authBloc;
   final _formKey = GlobalKey<FormState>();

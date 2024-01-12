@@ -1,11 +1,10 @@
-import 'package:e_commerce/helpers/reusable_widget.dart';
-import 'package:e_commerce/screens/dashboard.dart';
-import 'package:e_commerce/screens/signup.dart';
-import 'package:e_commerce/screens/create_shop_success_screen.dart';
+import 'package:e_commerce/helpers/widget_helper.dart';
+import 'package:e_commerce/screens/end_user/dashboard.dart';
+import 'package:e_commerce/screens/end_user/common/signup.dart';
+import 'package:e_commerce/screens/shop_owner/create_shop_success_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/gestures.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_commerce/blocs/auth_bloc/auth_bloc.dart';
@@ -49,7 +48,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
       // Show an error snackbar 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Error during sign-in. Please try again."),
           duration: Duration(seconds: 3),
         ),
@@ -271,7 +270,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => SignUpScreen(),
+                                    builder: (context) => const SignUpScreen(),
                                   ),
                                 );
                               },

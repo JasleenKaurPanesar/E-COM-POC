@@ -1,6 +1,6 @@
-import 'package:e_commerce/screens/dashboard.dart';
-import 'package:e_commerce/screens/signin.dart';
-import 'package:e_commerce/screens/signup.dart';
+import 'package:e_commerce/screens/end_user/dashboard.dart';
+import 'package:e_commerce/screens/end_user/common/signin.dart';
+import 'package:e_commerce/screens/end_user/common/signup.dart';
 
 import 'package:flutter/material.dart';
 

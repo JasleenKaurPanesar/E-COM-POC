@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:e_commerce/model/product.dart';
-import 'package:e_commerce/screens/add_product_screen.dart';
-import 'package:e_commerce/screens/product_card_owner.dart';
+import 'package:e_commerce/screens/shop_owner/add_product_screen.dart';
+import 'package:e_commerce/screens/shop_owner/product_card_owner.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_bloc.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

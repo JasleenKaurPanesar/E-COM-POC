@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_bloc.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_event.dart';
 import 'package:e_commerce/model/shop.dart';
-import 'package:e_commerce/helpers/reusable_widget.dart';
+import 'package:e_commerce/helpers/widget_helper.dart';
 import 'package:e_commerce/reusable_widget/image_picker.dart';
-import 'package:e_commerce/screens/create_shop_success_screen.dart';
+import 'package:e_commerce/screens/shop_owner/create_shop_success_screen.dart';
 
 class CreateShopScreen extends StatefulWidget {
   final String uid;

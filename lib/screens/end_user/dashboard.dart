@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:e_commerce/blocs/shops_bloc/shops.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_bloc.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_event.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_state.dart';
 import 'package:e_commerce/blocs/shops_bloc/shop_service.dart';
 import 'package:e_commerce/model/shop.dart';
-import 'package:e_commerce/screens/shop_detail.dart';
+import 'package:e_commerce/screens/end_user/shop_detail.dart';
 import 'package:e_commerce/reusable_widget/custom_app_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';

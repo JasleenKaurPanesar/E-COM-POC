@@ -1,6 +1,6 @@
-import 'package:e_commerce/screens/create_shop_success_screen.dart';
+import 'package:e_commerce/screens/shop_owner/create_shop_success_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:e_commerce/helpers/reusable_widget.dart';
+import 'package:e_commerce/helpers/widget_helper.dart';
 import 'package:e_commerce/model/shop.dart';
 import 'package:e_commerce/model/product.dart';
 import 'package:e_commerce/cubit/user_cubit.dart';

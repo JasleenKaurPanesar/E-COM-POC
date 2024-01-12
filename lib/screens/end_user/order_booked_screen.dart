@@ -10,7 +10,7 @@ class OrderBookedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Order Booked"),
+        title: const Text("Order Booked"),
       ),
       body: const Center(
         child: Column(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:e_commerce/model/product.dart';
-import 'package:e_commerce/screens/add_product_screen.dart';
-import 'package:e_commerce/screens/product_card.dart';
-import 'package:e_commerce/screens/book_order_screen.dart';
+import 'package:e_commerce/screens/shop_owner/add_product_screen.dart';
+import 'package:e_commerce/screens/end_user/product_card.dart';
+import 'package:e_commerce/screens/end_user/book_order_screen.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_bloc.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_event.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_state.dart';
@@ -66,7 +66,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                     children: [
                       Text(
                         widget.shop.name,
-                        style: Theme.of(context).textTheme.headline5,
+                        style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -76,7 +76,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                       const SizedBox(height: 20),
                       Text(
                         'Products',
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: 10),
                       Column(

@@ -7,7 +7,7 @@ import 'shops_state.dart';
 import 'package:e_commerce/blocs/shops_bloc/shop_service.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_commerce/helpers/reusable_widget.dart';
+import 'package:e_commerce/helpers/widget_helper.dart';
 
 
 
@@ -295,12 +295,12 @@ Future<void> _mapUpdateProductIsShownToState(UpdateProductIsShownEvent event, Em
           ? productsData.map((productData) => Product.fromMap(productData)).toList()
           : [];
 
-      // Find the product with the specified productId
+      // Find the product with the specified product
       Product updatedProduct = products.firstWhere(
         (product) => product.name == event.name,
         orElse: () => Product(
           name: event.name,
-          photo: '', // provide appropriate default values
+          photo: '', // appropriate default values
           description: '',
           price: 0.0,
           quantity: 0,
@@ -308,7 +308,7 @@ Future<void> _mapUpdateProductIsShownToState(UpdateProductIsShownEvent event, Em
         ),
       );
 
-      // Update the quantity of the product
+      // Update the reuired field
       updatedProduct.isShown = event.isShown;
      
       // Update the shop data in Firestore
