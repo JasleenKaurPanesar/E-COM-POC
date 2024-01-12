@@ -148,6 +148,10 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
                         // Dispatch the CreateShop event
                         BlocProvider.of<ShopsBloc>(context)
                             .add(CreateShop(newShop: newShop, uid: uid));
+                                // Dispatch the FetchUserShops event to reload user's shops
+                      BlocProvider.of<ShopsBloc>(context).add(FetchUserShops(uid: uid));
+
+ 
 
                         // Wait for a short duration (e.g., 500 milliseconds) to allow the state to update
                         await Future.delayed(const Duration(milliseconds: 500));

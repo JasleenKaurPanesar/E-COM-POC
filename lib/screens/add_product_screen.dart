@@ -158,13 +158,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             uid: uid1,
                             newProduct: newProduct,
                           ));
+                          BlocProvider.of<ShopsBloc>(context).add(FetchUserShops(uid: uid));
                          // Wait for a short duration (e.g., 500 milliseconds) to allow the state to update
+                          await Future.delayed(const Duration(milliseconds: 500));
                            Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>  CreateShopSuccessScreen(uid:uid),
-        ),
-      );
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>  CreateShopSuccessScreen(uid:uid),
+                              ),
+                            );
                           // Navigator.pop(context);
                         }
                       },

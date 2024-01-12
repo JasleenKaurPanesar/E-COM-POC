@@ -42,8 +42,7 @@ class AuthUnauthenticated extends AuthState {}
           error == other.error &&
           uniqueId == other.uniqueId;
 
-  @override
-  int get hashCode => error.hashCode ^ uniqueId.hashCode;
+
 }
 
 
