@@ -65,7 +65,7 @@ late Position _userLocation = Position(
       print("user location ${_userLocation}");
       shopsBloc.add(LoadShops());
     } catch (e) {
-      // Handle location retrieval error
+      // Handle location  error
       print("Error getting user location: $e");
     }
   }
@@ -99,7 +99,7 @@ late Position _userLocation = Position(
       appBar: const CustomAppBar(title:"Shops List"),
       body: BlocListener<ShopsBloc, ShopsState>(
         listener: (context, state) {
-          // Your listener logic goes here, if needed
+    
         },
         child: BlocBuilder<ShopsBloc, ShopsState>(
           builder: (context, state) {
@@ -132,7 +132,7 @@ late Position _userLocation = Position(
                         if (value != null) {
                           setState(() {
                             selectedRadius = value;
-                            // Dispatch the FilterShops event with userLocation and selectedRadius
+                            
                             shopsBloc.add(FilterShops(userLocation: _userLocation, selectedRadius: value));
                           });
                         }

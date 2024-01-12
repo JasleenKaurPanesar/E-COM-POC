@@ -12,7 +12,7 @@ class OrderBookedScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Order Booked"),
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

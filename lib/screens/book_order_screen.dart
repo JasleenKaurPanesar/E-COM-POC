@@ -57,7 +57,7 @@ class BookOrderScreen extends StatelessWidget {
                           title: Text(product.name),
                           subtitle: Text('Price: \$${product.price.toString()}'),
                           trailing: Text('Qty: ${product.quantity.toString()}'),
-                          // Add any additional information you want to display for each product
+                         
                         ),
                       );
                     },
@@ -86,10 +86,7 @@ class BookOrderScreen extends StatelessWidget {
               onPressed: () {
                 // Book the order using CartBloc
                 context.read<CartBloc>().add(BookOrderEvent());
-               // Reload shops by dispatching LoadShops event
-  
-
-                // Navigate to the Order Booked screen
+              // Navigate to the Order Booked screen
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -101,7 +98,7 @@ class BookOrderScreen extends StatelessWidget {
             ),
           );
         } else {
-          return CircularProgressIndicator(); // or some loading state
+          return CircularProgressIndicator(); 
         }
       },
     );
