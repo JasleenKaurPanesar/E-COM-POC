@@ -23,15 +23,13 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  late FirebaseAuth _auth;
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   bool isButtonClicked = false; // Initialize isButtonClicked to false
 
   @override
   void initState() {
     super.initState();
-    _auth = FirebaseAuth.instance;
   }
 
   void _signInWithEmailAndPassword(BuildContext context) async {
@@ -63,14 +61,14 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("Building SignInScreen");
+   
     return Scaffold(
       backgroundColor: Colors.white,
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) async {
           if (state is AuthAuthenticated) {
             // Handle authentication success
-            print("state user ${state.user}");
+          
 
             DocumentSnapshot userSnapshot =
                 await FirebaseFirestore.instance.collection('users').doc(state.user.uid).get();
@@ -78,7 +76,7 @@ class _SignInScreenState extends State<SignInScreen> {
             Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
 
             String userRole = userData['role'];
-            print("state user ${state.user.uid}");
+            
             String uid = state.user.uid;
 
             context.read<RoleCubit>().setUserRole(userRole);
@@ -104,7 +102,7 @@ class _SignInScreenState extends State<SignInScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.error),
-                duration: Duration(seconds: 3),
+                duration: const Duration(seconds: 3),
               ),
             );
 

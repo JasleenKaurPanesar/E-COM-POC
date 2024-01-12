@@ -57,21 +57,21 @@ class _ImagePickerFieldState extends State<ImagePickerField> {
                       height: 150,
                       width: 150,
                     )
-                  : Icon(Icons.add_photo_alternate, size: 40),
+                  : const Icon(Icons.add_photo_alternate, size: 40),
             ),
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         TextButton(
           onPressed: () => _showImagePickerOptions(context),
-          child: Text('Pick Image'),
+          child: const Text('Pick Image'),
         ),
         if (_validationMessage != null)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Text(
               _validationMessage!,
-              style: TextStyle(color: Colors.red),
+              style: const TextStyle(color: Colors.red),
             ),
           ),
       ],
@@ -86,16 +86,16 @@ class _ImagePickerFieldState extends State<ImagePickerField> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              leading: Icon(Icons.photo_library),
-              title: Text('Photo Gallery'),
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Photo Gallery'),
               onTap: () {
                 Navigator.pop(context);
                 _pickImage(ImageSource.gallery);
               },
             ),
             ListTile(
-              leading: Icon(Icons.photo_camera),
-              title: Text('Camera'),
+              leading: const Icon(Icons.photo_camera),
+              title: const Text('Camera'),
               onTap: () {
                 Navigator.pop(context);
                 _pickImage(ImageSource.camera);

@@ -7,11 +7,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_bloc.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-  List<Product> _cart = [];
+  final List<Product> _cart = [];
   String shopName = '';
   final ShopsBloc shopsBloc;
 
-  CartBloc({required this.shopsBloc}) : super(CartLoadedState([])) {
+  CartBloc({required this.shopsBloc}) : super(const CartLoadedState([])) {
     on<AddToCartEvent>(_addToCart);
     on<RemoveFromCartEvent>(_removeFromCart);
     on<BookOrderEvent>(_bookOrder);
@@ -47,7 +47,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   Future<void> _updateProductQuantity(String shopName, String productName, int newQuantity) async {
-    print("ShopName ${shopName}");
+
     try {
       DocumentReference shopDocument =
           FirebaseFirestore.instance.collection('shops').doc(shopName.replaceAll(' ', ''));
@@ -64,8 +64,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         if (currentQuantity >= newQuantity) {
           shopData['products'][productIndex]['quantity'] = currentQuantity - newQuantity;
           await shopDocument.update(shopData);
-          print('Quantity updated successfully.');
-          // Notify the ShopsBloc to reload the shops
+    
           shopsBloc.add(LoadShops());
         } else {
           print('Insufficient quantity available.');

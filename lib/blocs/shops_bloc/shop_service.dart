@@ -20,14 +20,14 @@ class ShopService {
     return [];
   }
 
-  List<Shop> nearbyShops = shops.where((shop) {
+  List<Shop> nearbyShops =  shops.where((shop) {
     double distance = Geolocator.distanceBetween(
       userLocation.latitude,
       userLocation.longitude,
       shop.latitude,
       shop.longitude,
     );
-
+   
     return distance / 1000 <= selectedRadius; // Convert to kilometers
   }).toList();
 

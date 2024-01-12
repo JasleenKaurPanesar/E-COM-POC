@@ -4,7 +4,7 @@ import 'package:e_commerce/blocs/shops_bloc/shops.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_bloc.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_event.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_state.dart';
-import 'package:e_commerce/blocs/shops_bloc/shopService.dart';
+import 'package:e_commerce/blocs/shops_bloc/shop_service.dart';
 import 'package:e_commerce/model/shop.dart';
 import 'package:e_commerce/screens/shop_detail.dart';
 import 'package:e_commerce/reusable_widget/custom_app_bar.dart';
@@ -46,7 +46,8 @@ late Position _userLocation = Position(
     cartBloc = CartBloc(shopsBloc: shopsBloc);
 
     // Make sure you are not listening to _reloadSubscription elsewhere
-    if(_reloadSubscription==null){
+    // ignore: prefer_conditional_assignment
+    if(_reloadSubscription == null){
     _reloadSubscription = shopsBloc.reloadStream.listen((_) {
       shopsBloc.add(LoadShops());
     });}
@@ -61,6 +62,7 @@ late Position _userLocation = Position(
     try {
       _userLocation = await _getUserLocation();
       // Dispatch the LoadShops event to initiate loading shops
+      print("user location ${_userLocation}");
       shopsBloc.add(LoadShops());
     } catch (e) {
       // Handle location retrieval error
@@ -94,7 +96,7 @@ late Position _userLocation = Position(
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title:"Shops List"),
+      appBar: const CustomAppBar(title:"Shops List"),
       body: BlocListener<ShopsBloc, ShopsState>(
         listener: (context, state) {
           // Your listener logic goes here, if needed
@@ -102,13 +104,14 @@ late Position _userLocation = Position(
         child: BlocBuilder<ShopsBloc, ShopsState>(
           builder: (context, state) {
             if (state is ShopsLoading) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (state is ShopsLoaded) {
              
               List<Shop> shops = state.shops;
               shops=ShopService.getShopsInRadius(shops, _userLocation, selectedRadius);
+             
               if (shops.isEmpty) {
-                return Center(child: Text("Shop not found"));
+                return const Center(child: Text("Shop not found"));
               }
 
               return Column(
@@ -116,7 +119,7 @@ late Position _userLocation = Position(
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Filter Shops by distance"),
+                      const Text("Filter Shops by distance"),
                       DropdownButton<double>(
                         value: selectedRadius,
                         items: [1.0, 10.0, 15.0].map<DropdownMenuItem<double>>((double value) {
@@ -150,10 +153,10 @@ late Position _userLocation = Position(
 
                         return Card(
                           elevation: 3,
-                          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
-                            side: BorderSide(color: Colors.blue),
+                            side: const BorderSide(color: Colors.blue),
                           ),
                           child: ListTile(
                             leading: CircleAvatar(
@@ -169,7 +172,7 @@ late Position _userLocation = Position(
                                 ),
                               ],
                             ),
-                            trailing: Icon(Icons.arrow_forward),
+                            trailing: const Icon(Icons.arrow_forward),
                             onTap: () {
                               Navigator.push(
                                 context,

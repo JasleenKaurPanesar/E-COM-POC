@@ -22,6 +22,10 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
     super.initState();
     context.read<ShopsBloc>().add(FetchUserShops(uid: widget.uid));
   }
+   @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,24 +38,24 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
         }
       },
       child: Scaffold(
-        appBar: CustomAppBar(title: 'User Shops'),
+        appBar: const CustomAppBar(title: 'User Shops'),
         body: BlocBuilder<ShopsBloc, ShopsState>(
           builder: (context, state) {
-            print("state $state");
+      
             if (state is UserShopsLoaded) {
               if (state.userShops.isEmpty) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         'No Shops added yet',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -59,7 +63,7 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
                             MaterialPageRoute(builder: (context) => CreateShopScreen(uid: widget.uid)),
                           );
                         },
-                        child: Text('Add Shop'),
+                        child: const Text('Add Shop'),
                       ),
                     ],
                   ),
@@ -70,8 +74,8 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
                     child: Text(
                       'Your Shops as below. Add Shops here',
                       style: TextStyle(
@@ -80,7 +84,7 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
@@ -90,7 +94,7 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
                           MaterialPageRoute(builder: (context) => CreateShopScreen(uid: widget.uid)),
                         );
                       },
-                      child: Text('Add Shop'),
+                      child: const Text('Add Shop'),
                     ),
                   ),
                   Expanded(
@@ -107,7 +111,7 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
                           },
                           child: Card(
                             elevation: 3,
-                            margin: EdgeInsets.all(8),
+                            margin: const EdgeInsets.all(8),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
@@ -123,23 +127,23 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           shop.name,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 16,
                                           ),
                                         ),
-                                        SizedBox(height: 4),
+                                        const SizedBox(height: 4),
                                         Text(shop.address),
-                                        SizedBox(height: 4),
+                                        const SizedBox(height: 4),
                                         Text("Longitude: ${shop.longitude.toString()}"),
-                                        SizedBox(height: 4),
+                                        const SizedBox(height: 4),
                                         Text("Latitude: ${shop.latitude.toString()}"),
                                       ],
                                     ),
@@ -156,7 +160,7 @@ class _CreateShopSuccessScreenState extends State<CreateShopSuccessScreen> {
               );
             } 
             else {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             }

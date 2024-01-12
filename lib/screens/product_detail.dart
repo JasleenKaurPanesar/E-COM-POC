@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:e_commerce/model/product.dart';
-import 'package:e_commerce/screens/cart_screen.dart';
 import 'package:e_commerce/screens/add_product_screen.dart';
 import 'package:e_commerce/screens/product_card_owner.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_bloc.dart';
-import 'package:e_commerce/blocs/cart_bloc/cart_event.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_commerce/model/shop.dart';
-import 'package:e_commerce/cubit/user_cubit.dart';
 import 'package:e_commerce/cubit/role_cubit.dart';
 import 'package:e_commerce/reusable_widget/custom_app_bar.dart';
 class ProductDetailScreen extends StatefulWidget {
@@ -30,7 +27,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final String userRole = context.read<RoleCubit>().getUserRole() ?? '';
 
     return Scaffold(
-      appBar: CustomAppBar(title:"Shop Details"),
+      appBar: const CustomAppBar(title:"Shop Details"),
       body: SingleChildScrollView(
         child: BlocBuilder<CartBloc, CartState>(
           builder: (context, state) {
@@ -48,23 +45,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         widget.shop.name,
                         style: Theme.of(context).textTheme.headline5,
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         widget.shop.description,
                         style: TextStyle(color: Colors.grey[600]),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Text(
                         'Products',
                         style: Theme.of(context).textTheme.headline6,
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       // Display the details of each product
                       for (Product product in widget.shop.products)
                         ProductCardOwner(
                           product: product
                         ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       if (userRole == 'Shop Owner')
                         ElevatedButton(
                           onPressed: () {
@@ -75,7 +72,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               ),
                             );
                           },
-                          child: Text('Add Product'),
+                          child: const Text('Add Product'),
                         ),
                     ],
                   ),

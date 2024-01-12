@@ -1,3 +1,4 @@
+import 'package:e_commerce/screens/create_shop_success_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:e_commerce/helpers/reusable_widget.dart';
 import 'package:e_commerce/model/shop.dart';
@@ -47,7 +48,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   buildTextField(
                     text: 'Product Name',
                     icon: Icons.shopping_cart,
-                    isPasswordType: false,
+        
                     controller: _nameController,
                     validator: (value) {
                       if (_isButtonClicked && (value == null || value.isEmpty)) {
@@ -91,7 +92,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   buildTextField(
                     text: 'Product Description',
                     icon: Icons.description,
-                    isPasswordType: false,
+                    
                     controller: _descriptionController,
                     validator: (value) {
                       if (_isButtonClicked && (value == null || value.isEmpty)) {
@@ -106,7 +107,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   buildTextField(
                     text: 'Product Price',
                     icon: Icons.money,
-                    isPasswordType: false,
+                   
                     controller: _priceController,
                     validator: (value) {
                       if (_isButtonClicked && (value == null || double.tryParse(value) == null)) {
@@ -120,7 +121,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   buildTextField(
                     text: 'Product Quantity',
                     icon: Icons.format_list_numbered,
-                    isPasswordType: false,
+                    
                     controller: _quantityController,
                     validator: (value) {
                       if (_isButtonClicked && (value == null || int.tryParse(value) == null)) {
@@ -134,7 +135,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async{
                         setState(() {
                           _isButtonClicked = true;
                         });
@@ -157,8 +158,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             uid: uid1,
                             newProduct: newProduct,
                           ));
-
-                          Navigator.pop(context);
+                         // Wait for a short duration (e.g., 500 milliseconds) to allow the state to update
+                           Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>  CreateShopSuccessScreen(uid:uid),
+        ),
+      );
+                          // Navigator.pop(context);
                         }
                       },
                       child: const Padding(

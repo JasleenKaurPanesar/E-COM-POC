@@ -21,7 +21,7 @@ class SignUpEvent extends AuthEvent {
   final String password;
   final String role;
 
-  SignUpEvent({
+  const SignUpEvent({
     required this.username,
     required this.email,
     required this.password,

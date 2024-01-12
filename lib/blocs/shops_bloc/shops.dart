@@ -5,12 +5,12 @@ import 'package:e_commerce/model/shop.dart';
 class ShopList {
  
   static Future<List<Shop>> getShops() async {
-     print("shopList");
+
     try {
-      CollectionReference _referenceShoppingList =
+      CollectionReference referenceShoppingList =
           FirebaseFirestore.instance.collection('shops');
 
-      QuerySnapshot snapshot = await _referenceShoppingList.get();
+      QuerySnapshot snapshot = await referenceShoppingList.get();
 
       if (snapshot.docs.isEmpty) {
         // If there are no documents in the collection, return an empty list
@@ -39,7 +39,7 @@ class ShopList {
           products: products,
         );
       }).toList();
-     print('Shop Detailsdummy: ${shops[0].name}, ${shops[0].address}, ${shops[0].latitude}, ${shops[0].longitude}');
+
 
       return shops;
     } catch (e) {

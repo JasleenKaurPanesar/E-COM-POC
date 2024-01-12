@@ -1,7 +1,6 @@
 // auth_bloc.dart
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'auth_event.dart';
@@ -29,7 +28,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     if (user != null) {
       // Delay to allow time for authentication state to propagate
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
         emit(AuthAuthenticated(user: user));
       } else {
         emit(AuthError(error: 'Sign-In failed. Please check cred.', uniqueId: DateTime.now().toString()));

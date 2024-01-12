@@ -45,7 +45,7 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
                   buildTextField(
                     text: "Shop Name",
                     icon: Icons.shop,
-                    isPasswordType: false,
+                    
                     controller: _nameController,
                     validator: (value) =>
                         _isButtonClicked && value!.isEmpty
@@ -80,19 +80,20 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
                   buildTextField(
                     text: "Description",
                     icon: Icons.description,
-                    isPasswordType: false,
+             
                     controller: _descriptionController,
                     validator: (value) =>
                         _isButtonClicked && value!.isEmpty
                             ? 'Description cannot be empty'
                             : null,
                     isButtonEnabled: true,
+                    maxLines: 3,
                   ),
                   const SizedBox(height: 16),
                   buildTextField(
                     text: "Address",
                     icon: Icons.location_on,
-                    isPasswordType: false,
+            
                     controller: _addressController,
                     validator: (value) =>
                         _isButtonClicked && value!.isEmpty
@@ -104,7 +105,7 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
                   buildTextField(
                     text: "Latitude",
                     icon: Icons.map,
-                    isPasswordType: false,
+          
                     controller: _latController,
                     validator: (value) =>
                         _isButtonClicked && value!.isEmpty
@@ -116,7 +117,7 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
                   buildTextField(
                     text: "Longitude",
                     icon: Icons.map,
-                    isPasswordType: false,
+                 
                     controller: _lngController,
                     validator: (value) =>
                         _isButtonClicked && value!.isEmpty

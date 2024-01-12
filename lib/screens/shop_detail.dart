@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:e_commerce/model/product.dart';
-import 'package:e_commerce/screens/cart_screen.dart';
 import 'package:e_commerce/screens/add_product_screen.dart';
 import 'package:e_commerce/screens/product_card.dart';
+import 'package:e_commerce/screens/book_order_screen.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_bloc.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_event.dart';
 import 'package:e_commerce/blocs/cart_bloc/cart_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_commerce/model/shop.dart';
-import 'package:e_commerce/cubit/user_cubit.dart';
 import 'package:e_commerce/cubit/role_cubit.dart';
 import 'package:e_commerce/reusable_widget/custom_app_bar.dart';
+
 class ShopDetailScreen extends StatefulWidget {
   final Shop shop;
 
@@ -40,7 +40,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
     final String userRole = context.read<RoleCubit>().getUserRole() ?? '';
 
     return Scaffold(
-      appBar: CustomAppBar(title:"Shops Details"),
+      appBar: const CustomAppBar(title: "Shops Details"),
       body: SingleChildScrollView(
         child: BlocBuilder<CartBloc, CartState>(
           builder: (context, state) {
@@ -68,21 +68,21 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                         widget.shop.name,
                         style: Theme.of(context).textTheme.headline5,
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         widget.shop.description,
                         style: TextStyle(color: Colors.grey[600]),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Text(
                         'Products',
                         style: Theme.of(context).textTheme.headline6,
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Column(
                         children: widget.shop.products
-                        .where((product) => product.isShown) // Filter products based on isShown
-                        .map((product) {
+                            .where((product) => product.isShown) // Filter products based on isShown
+                            .map((product) {
                           return ProductCard(
                             product: product,
                             onAddToCart: (product, quantity) {
@@ -93,9 +93,9 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                             },
                           );
                         })
-                        .toList(),
+                            .toList(),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       if (userRole == 'Shop Owner')
                         ElevatedButton(
                           onPressed: () {
@@ -106,7 +106,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                               ),
                             );
                           },
-                          child: Text('Add Product'),
+                          child: const Text('Add Product'),
                         ),
                       if (userRole != 'Shop Owner')
                         ElevatedButton(
@@ -114,11 +114,11 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => CartScreen(cart: cart, shopName: widget.shop.name),
+                                builder: (context) => BookOrderScreen(selectedProducts: cart),
                               ),
                             );
                           },
-                          child: Text('View Cart'),
+                          child: const Text('View Cart'),
                         ),
                     ],
                   ),
@@ -131,5 +131,3 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
     );
   }
 }
-
-

@@ -6,7 +6,7 @@ class ProductCard extends StatefulWidget {
   final Function(Product, int) onAddToCart;
   final Function(String, int) onUpdateQuantityAfterOrder;
 
-  const ProductCard({
+  const ProductCard({super.key, 
     required this.product,
     required this.onAddToCart,
     required this.onUpdateQuantityAfterOrder,
@@ -27,7 +27,7 @@ class _ProductCardState extends State<ProductCard> {
   }
 
   void decrementQuantity() {
-    if (quantity > 1) {
+    if (quantity > 0) {
       setState(() {
         quantity--;
       });
@@ -39,7 +39,7 @@ class _ProductCardState extends State<ProductCard> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -61,29 +61,29 @@ class _ProductCardState extends State<ProductCard> {
           children: [
             Text(
               '\$${widget.product.price.toStringAsFixed(2)}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.green,
               ),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               'Qty:${widget.product.quantity}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.green,
               ),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.remove),
+                  icon: const Icon(Icons.remove),
                   onPressed: decrementQuantity,
                 ),
                 Text('Quantity: $quantity'),
                 IconButton(
-                  icon: Icon(Icons.add),
+                  icon: const Icon(Icons.add),
                   onPressed: incrementQuantity,
                 ),
               ],

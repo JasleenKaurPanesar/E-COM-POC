@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:e_commerce/cubit/user_cubit.dart';
-import 'package:e_commerce/blocs/shops_bloc/shops_state.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_event.dart';
 import 'package:e_commerce/blocs/shops_bloc/shops_bloc.dart'; // Import your shops_bloc file
 
@@ -35,7 +34,6 @@ class _ProductCardOwnerState extends State<ProductCardOwner> {
   void updateProductQuantityPrice(String shopId, String uid, String name, int newQuantity, double newPrice) {
     // Use context.read to get the instance of ShopsBloc
     final shopsBloc = context.read<ShopsBloc>();
-    print("gaggggggggggg ${uid}");
     // Dispatch the UpdateProductEvent
     shopsBloc.add(
       UpdateProductEvent(
@@ -69,13 +67,13 @@ class _ProductCardOwnerState extends State<ProductCardOwner> {
     return Container(
       child: Card(
         elevation: 3,
-        margin: EdgeInsets.only(bottom: 16),
+        margin: const EdgeInsets.only(bottom: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
         child: SingleChildScrollView(
           child: ListTile(
-            contentPadding: EdgeInsets.all(16),
+            contentPadding: const EdgeInsets.all(16),
             title: Text(widget.product.name),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,39 +92,39 @@ class _ProductCardOwnerState extends State<ProductCardOwner> {
                     ),
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Row(
                   children: [
-                    Text(
+                    const Text(
                       'Description:',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.green,
                       ),
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Expanded(
                       child: Text(
                         widget.product.description,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.green,
                         ),
                       ),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                   ],
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Row(
                   children: [
-                    Text(
+                    const Text(
                       'Price:',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.green,
                       ),
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     if (_isEditing)
                       Expanded(
                         child: TextFormField(
@@ -140,12 +138,12 @@ class _ProductCardOwnerState extends State<ProductCardOwner> {
                     else
                       Text(
                         '\$${widget.product.price.toStringAsFixed(2)}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.green,
                         ),
                       ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     InkWell(
                       onTap: () {
                         setState(() {
@@ -159,17 +157,17 @@ class _ProductCardOwnerState extends State<ProductCardOwner> {
                     ),
                   ],
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Row(
                   children: [
-                    Text(
+                    const Text(
                       'Qty:',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.green,
                       ),
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     if (_isEditing)
                       Expanded(
                         child: TextFormField(
@@ -183,12 +181,12 @@ class _ProductCardOwnerState extends State<ProductCardOwner> {
                     else
                       Text(
                         widget.product.quantity.toString(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.green,
                         ),
                       ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     InkWell(
                       onTap: () {
                         setState(() {
@@ -202,7 +200,7 @@ class _ProductCardOwnerState extends State<ProductCardOwner> {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 if (_isEditing)
                   Row(
                     children: [
@@ -227,20 +225,20 @@ class _ProductCardOwnerState extends State<ProductCardOwner> {
                         style: ElevatedButton.styleFrom(
                           primary: Colors.blue, // Set the background color
                         ),
-                        child: Text('Save Changes'),
+                        child: const Text('Save Changes'),
                       ),
                     ],
                   ),
                 Row(
                   children: [
-                    Text(
+                    const Text(
                       'Show:',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.green,
                       ),
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Switch(
                       value: _isShown,
                       onChanged: (value) {

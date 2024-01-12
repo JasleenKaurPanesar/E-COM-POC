@@ -4,12 +4,9 @@ import 'package:e_commerce/model/product.dart';
 import 'shops_event.dart';
 import 'shops_state.dart';
 
-import 'package:e_commerce/blocs/shops_bloc/ShopService.dart';
+import 'package:e_commerce/blocs/shops_bloc/shop_service.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path/path.dart';
 import 'package:e_commerce/helpers/reusable_widget.dart';
 
 
@@ -27,10 +24,10 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
     on<UpdateProductIsShownEvent>(_mapUpdateProductIsShownToState);
   }
 
-  // Stream for reloading shops
+
   Stream<void> get reloadStream => _reloadController.stream;
 
-  // Function to trigger a reload
+ 
   void reloadShops() {
     _reloadController.add(null);
 
@@ -53,8 +50,8 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
 
   try {
   List<Shop> shops = await ShopService.getAllShops();
-  print("filterrrrrrrrrrrrrrrrrrrrrrrrrr ${shops.length}");
-    shops=await ShopService.getShopsInRadius(
+
+    shops=ShopService.getShopsInRadius(
       shops,
       event.userLocation,
       event.selectedRadius,
@@ -79,7 +76,7 @@ Future<void> _mapCreateShopToState(CreateShop event, Emitter<ShopsState> emit) a
     String photoURL = await uploadImageToStorage(event.newShop.photo, event.newShop.name.toLowerCase().replaceAll(" ", ""));
     // Update the shop photo URL in the createdShop object
      createdShop.photo = photoURL;
-    print("urllllllll ${photoURL}");
+   
     // Add the new shop to the 'shops' field inside the user's document
     await FirebaseFirestore.instance.collection('users').doc(event.uid).update({
       'shops': FieldValue.arrayUnion([createdShop.name]),
@@ -182,17 +179,17 @@ Future<void> _mapCreateShopToState(CreateShop event, Emitter<ShopsState> emit) a
 
         emit(UserShopsLoaded(userShops: shops));
       } else {
-        print('User document not found for UID: ${event.uid}');
+       
         emit(ShopsError(error: 'User document not found'));
       }
     } catch (e) {
-      print('Error fetching user shops for UID: ${event.uid}');
+  
       emit(ShopsError(error: 'Error fetching user shops: $e'));
     }
   }
 
  Future<void> _mapAddProductToState(AddProductEvent event, Emitter<ShopsState> emit) async {
-  print("checkkkkkkkkkkk ${event.shopId} ${event.uid}");
+
   try {
     // Fetch the current shop data
     DocumentSnapshot shopSnapshot = await FirebaseFirestore.instance.collection('shops').doc(event.shopId).get();
@@ -218,7 +215,8 @@ Future<void> _mapCreateShopToState(CreateShop event, Emitter<ShopsState> emit) a
       await FirebaseFirestore.instance.collection('shops').doc(event.shopId).update({
         'products': products.map((product) => product.toMap()).toList(),
       });
-  
+    // Wait for a short duration (e.g., 1000 milliseconds) to allow the state to update
+      await Future.delayed(const Duration(milliseconds: 1000));
       // Fetch the updated user shops after adding a new product
       List<Shop> updatedShops = await _fetchUserShops(event.uid);
 
